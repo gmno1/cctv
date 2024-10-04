@@ -47,7 +47,7 @@
             setInterval(function() {
                 var newTimestamp = new Date().getTime();
                 $("#image").attr("src", baseUrl + imageUrl + "?tx=" + newTimestamp);
-            }, 2000);
+            }, 3000);
         } else {
             // If no image URL is provided, display an error message
             //alert("No image source provided. Please add '?img=your_image_url' to the URL.");
