@@ -34,7 +34,8 @@
                 //const streamingURL = findCamera(data, camId, cameraId, cameraName);
                 const cameraInfo = findCamera(data, camId, cameraId, cameraName);
 
-                if (streamingURL) {
+                //if (streamingURL) {
+                if (cameraInfo) {
                     // Redirect to the streaming URL if found
                     //window.location.href = streamingURL;
                     console.log('Camera Name:', cameraInfo.cameraName); // Log camera name for reference
