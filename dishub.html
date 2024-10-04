@@ -31,11 +31,14 @@
                 const cameraName = getQueryParam('cameraName');
 
                 // Search for the camera in the data
-                const streamingURL = findCamera(data, camId, cameraId, cameraName);
+                //const streamingURL = findCamera(data, camId, cameraId, cameraName);
+                const cameraInfo = findCamera(data, camId, cameraId, cameraName);
 
                 if (streamingURL) {
                     // Redirect to the streaming URL if found
-                    window.location.href = streamingURL;
+                    //window.location.href = streamingURL;
+                    console.log('Camera Name:', cameraInfo.cameraName); // Log camera name for reference
+                    window.location.href = cameraInfo.streamingURL;
                 } else {
                     document.body.innerHTML = 'Camera not found';
                     window.location.href = 'https://dishub.kaltimprov.go.id/semua-cctv';
@@ -57,7 +60,11 @@
                             (cameraId && camera.cameraId == cameraId) ||
                             (cameraName && camera.cameraName === cameraName)
                         ) {
-                            return camera.streamingURL;
+                            //return camera.streamingURL;
+                            return {
+                                streamingURL: camera.streamingURL,
+                                cameraName: camera.cameraName // Include camera name
+                            };                            
                         }
                     }
                 }
