@@ -37,15 +37,16 @@
         }
 
         // Get the image source from URL parameter
+        const baseUrl = "https://jid.jasamarga.com/cctv2/";
         const imageUrl = getParameterByName('img'); // Replace 'imgSrc' with your parameter name
         if (imageUrl) {
             // Set the initial source of the image
-            $("#image").attr("src", "https://jid.jasamarga.com/cctv2/" + imageUrl + "?tx=" + new Date().getTime());
+            $("#image").attr("src", baseUrl + imageUrl + "?tx=" + new Date().getTime());
 
             // Refresh the image every 5 seconds
             setInterval(function() {
                 var newTimestamp = new Date().getTime();
-                $("#image").attr("src", "https://jid.jasamarga.com/cctv2/" + imageUrl + "?tx=" + newTimestamp);
+                $("#image").attr("src", baseUrl + imageUrl + "?tx=" + newTimestamp);
             }, 2000);
         } else {
             // If no image URL is provided, display an error message
