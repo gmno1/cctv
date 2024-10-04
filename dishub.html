@@ -39,7 +39,7 @@
                     // Redirect to the streaming URL if found
                     //window.location.href = streamingURL;
                     //console.log('Camera Name:', cameraInfo.cameraName); // Log camera name for reference
-                    document.body.innerHTML = 'Camera Name: ', cameraInfo.cameraName;
+                    document.body.innerHTML = 'Camera Name: '+cameraInfo.cameraName;
                     window.location.href = cameraInfo.streamingURL;
                 } else {
                     document.body.innerHTML = 'Camera not found';
