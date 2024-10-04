@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Redirect</title>
+    <script>
+        // URL where the JSON data is hosted
+        const jsonUrl = 'https://i-see.iconpln.co.id/backend/api/View/embedlink?url=dishub.kaltimprov.go.id'; // Replace with your actual JSON URL
+
+        // Function to get URL parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Function to fetch and process the camera data
+        async function fetchCameraData() {
+            try {
+                const response = await fetch(jsonUrl);
+                const data = await response.json();
+
+                // Check if the response is valid and has status true
+                if (!data || data.status !== true) {
+                    throw new Error('Invalid camera data or status');
+                }
+
+                // Get the parameters from the URL (camId, cameraId, cameraName)
+                const camId = getQueryParam('camId');
+                const cameraId = getQueryParam('cameraId');
+                const cameraName = getQueryParam('cameraName');
+
+                // Search for the camera in the data
+                const streamingURL = findCamera(data, camId, cameraId, cameraName);
+
+                if (streamingURL) {
+                    // Redirect to the streaming URL if found
+                    window.location.href = streamingURL;
+                } else {
+                    document.body.innerHTML = 'Camera not found';
+                }
+            } catch (error) {
+                console.error('Error fetching or processing camera data:', error);
+                document.body.innerHTML = 'Error fetching camera data';
+            }
+        }
+
+        // Function to match the camera based on camId, cameraId, or cameraName
+        function findCamera(cameras, camId, cameraId, cameraName) {
+            for (const site of cameras.data) {
+                for (const area of site.areaTree) {
+                    for (const camera of area.cameraTree) {
+                        // Check if any of the provided parameters match
+                        if (
+                            (camId && camera.camId === camId) ||
+                            (cameraId && camera.cameraId == cameraId) ||
+                            (cameraName && camera.cameraName === cameraName)
+                        ) {
+                            return camera.streamingURL;
+                        }
+                    }
+                }
+            }
+            return null; // No match found
+        }
+
+        // Call the fetchCameraData function when the page loads
+        window.onload = fetchCameraData;
+    </script>
+</head>
+<body>
+    <h1>Redirecting...</h1>
+</body>
+</html>
