@@ -45,7 +45,7 @@
             // Refresh the image every 5 seconds
             setInterval(function() {
                 var newTimestamp = new Date().getTime();
-                $("#image").attr("src", imageUrl + "?tx=" + newTimestamp);
+                $("#image").attr("src", "https://jid.jasamarga.com/cctv2/" + imageUrl + "?tx=" + newTimestamp);
             }, 2000);
         } else {
             // If no image URL is provided, display an error message
