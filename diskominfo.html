@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CCTV</title>
+    <title>Camera Redirect</title>
     <style>
         body, html {
             margin: 0; /* Remove default margin */
@@ -68,6 +68,7 @@
 				const videoSrc = videoElement.getAttribute("src");
 				console.log("Video source URL:", videoSrc);
 				window.location.href = videoSrc;
+		  		changeVideoSrc(videoSrc);
 			  } else {
 				console.log("No video element found on the page");
 			  }
@@ -77,9 +78,8 @@
 			});
 		}else {
 			//console.error('Camera not found', 'no parameter');
-			  changeVideoSrc("https://vmssamarinda.iconpln.co.id:8443/mt/api/rest/v1/media?session=AYMAfP8KEOFwg8Ds1UExjWk1VvcCCekSFgoUVrnN3g8c9naAuf0927kxAj_ujTMaEPbi2UtGR0DQgMN75YkVm1IiEG4SCpxUgk9ivN4Jozv2qgkqEFBlbWtvdCBTYW1hcmluZGEyIRoQTZ6shHLARv-_iI3yRVfLVyoNYWRtaW5pc3RyYXRvcg&cameraId=4xIx1EszSTJMNkpKTjS2NNZLTsw1MBASEE7vKs8odvBuM3dQEV72LA4A&format=fmp4&frames=all&media=video&quality=high&t=live");
-			//document.body.innerHTML = 'Camera not found';
-			//window.location.href = 'https://diskominfo.samarindakota.go.id/media/cctv/';
+			document.body.innerHTML = 'Camera not found';
+			window.location.href = 'https://diskominfo.samarindakota.go.id/media/cctv/';
 		}
 
 	</script>
