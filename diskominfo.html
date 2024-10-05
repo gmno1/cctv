@@ -3,18 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Camera Redirect</title>
+    <title>CCTV</title>
+    <style>
+        body, html {
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+            height: 100%; /* Full height for body and html */
+            overflow: hidden; /* Hide scrollbars */
+            display: flex; /* Flexbox to center the image */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
+            background-color: black; /* Optional: set background color */
+        }
+        .stream__frame {
+            max-width: 100%; /* Maximum width */
+            max-height: 100%; /* Maximum height */
+       }
+    </style>
+</head>
+<body oncontextmenu="return false">
+  <video name="media" class="stream__frame" id="video_stream" autoplay muted playsinline 
+         poster="" 
+         src="" 
+         type="video/fmp4">
+  </video>
 	<script>
 		// Function to get URL parameters
 		function getQueryParam(param) {
 			const urlParams = new URLSearchParams(window.location.search);
 			return urlParams.get(param);
 		}
+    function changeVideoSrc(newSrc) {
+      var videoElement = document.getElementById('video_stream');
+	  if (videoElement) {
+		  videoElement.src = newSrc;
+		  videoElement.load(); // Ensure the video reloads with the new source
+		  videoElement.play(); // Optionally autoplay after the source change
+		} else {
+				console.log("No video element found on the page");
+			  }
+    }
 
 	  // URL of the page from which you want to get the video src
 	  const camId = getQueryParam('id');
 	  if(camId) {
-		  const url = "https://diskominfo.samarindakota.go.id/api/cctv/" + camId;		  
+		  const url = "https://diskominfo.samarindakota.go.id/api/cctv/" + camId;
+		  
 		  // Fetch the HTML content of the URL
 		  fetch(url)
 			.then(response => {
@@ -31,24 +65,23 @@
 			  // Find the video element and get its src attribute
 			  const videoElement = doc.querySelector("video");
 			  if (videoElement) {
-  				const videoSrc = videoElement.getAttribute("src");
-  				console.log("Video source URL:", videoSrc);
-  				window.location.href = videoSrc;
+				const videoSrc = videoElement.getAttribute("src");
+				console.log("Video source URL:", videoSrc);
+				window.location.href = videoSrc;
 			  } else {
-				  console.log("No video element found on the page");
+				console.log("No video element found on the page");
 			  }
 			})
 			.catch(error => {
 			  console.error('Error fetching the page:', error);
 			});
 		}else {
-			console.error('Camera not found', 'no parameter');
+			//console.error('Camera not found', 'no parameter');
+			  changeVideoSrc("https://vmssamarinda.iconpln.co.id:8443/mt/api/rest/v1/media?session=AYMAfP8KEOFwg8Ds1UExjWk1VvcCCekSFgoUVrnN3g8c9naAuf0927kxAj_ujTMaEPbi2UtGR0DQgMN75YkVm1IiEG4SCpxUgk9ivN4Jozv2qgkqEFBlbWtvdCBTYW1hcmluZGEyIRoQTZ6shHLARv-_iI3yRVfLVyoNYWRtaW5pc3RyYXRvcg&cameraId=4xIx1EszSTJMNkpKTjS2NNZLTsw1MBASEE7vKs8odvBuM3dQEV72LA4A&format=fmp4&frames=all&media=video&quality=high&t=live");
 			//document.body.innerHTML = 'Camera not found';
-			window.location.href = 'https://diskominfo.samarindakota.go.id/media/cctv/';
+			//window.location.href = 'https://diskominfo.samarindakota.go.id/media/cctv/';
 		}
+
 	</script>
-</head>
-<body>
-    <h1>Please wait... Searching for camera info</h1>
-</body>
+ </body>
 </html>
