@@ -3,54 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Refresh</title>
-    <style>
-        body, html {
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            height: 100%; /* Full height for body and html */
-            overflow: hidden; /* Hide scrollbars */
-            display: flex; /* Flexbox to center the image */
-            align-items: center; /* Center vertically */
-            justify-content: center; /* Center horizontally */
-            background-color: black; /* Optional: set background color */
+    <title>CCTV Dishub</title>
+    <script>
+        // URL where the JSON data is hosted
+        const jsonUrl = 'https://i-see.iconpln.co.id/backend/api/View/embedlink?url=dishub.kaltimprov.go.id'; // Replace with your actual JSON URL
+
+        // Function to get URL parameters
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
-        .fullscreen-image {
-            max-width: 100%; /* Maximum width */
-            max-height: 100%; /* Maximum height */
-            object-fit: contain; /* Maintain aspect ratio */
+
+        // Function to fetch and process the camera data
+        async function fetchCameraData() {
+            try {
+                const response = await fetch(jsonUrl);
+                const data = await response.json();
+
+                // Check if the response is valid and has status true
+                if (!data || data.status !== true) {
+                    throw new Error('Invalid camera data or status');
+                }
+
+                // Get the parameters from the URL (camId, cameraId, cameraName)
+                const camId = getQueryParam('camId');
+                const cameraId = getQueryParam('cameraId');
+                const cameraName = getQueryParam('cameraName');
+
+                // Search for the camera in the data
+                //const streamingURL = findCamera(data, camId, cameraId, cameraName);
+                const cameraInfo = findCamera(data, camId, cameraId, cameraName);
+
+                //if (streamingURL) {
+                if (cameraInfo) {
+                    // Redirect to the streaming URL if found
+                    //window.location.href = streamingURL;
+                    //console.log('Camera Name:', cameraInfo.cameraName); // Log camera name for reference
+                    document.body.innerHTML = 'Camera Name: '+cameraInfo.cameraName;
+                    window.location.href = cameraInfo.streamingURL;
+                } else {
+                    document.body.innerHTML = 'Camera not found';
+                    window.location.href = 'https://dishub.kaltimprov.go.id/semua-cctv';
+                }
+            } catch (error) {
+                console.error('Error fetching or processing camera data:', error);
+                document.body.innerHTML = 'Error fetching camera data';
+            }
         }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        // Function to match the camera based on camId, cameraId, or cameraName
+        function findCamera(cameras, camId, cameraId, cameraName) {
+            for (const site of cameras.data) {
+                for (const area of site.areaTree) {
+                    for (const camera of area.cameraTree) {
+                        // Check if any of the provided parameters match
+                        if (
+                            (camId && camera.camId === camId) ||
+                            (cameraId && camera.cameraId == cameraId) ||
+                            (cameraName && camera.cameraName === cameraName)
+                        ) {
+                            //return camera.streamingURL;
+                            return {
+                                streamingURL: camera.streamingURL,
+                                cameraName: camera.cameraName // Include camera name
+                            };                            
+                        }
+                    }
+                }
+            }
+            return null; // No match found
+        }
+
+        // Call the fetchCameraData function when the page loads
+        window.onload = fetchCameraData;
+    </script>
 </head>
 <body>
-    <img class="fullscreen-image" id="image" alt="CCTV Image">
-    <script>
-        // Function to get the URL parameter
-        function getParameterByName(name) {
-            const url = window.location.href;
-            const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
-        }
-
-        // Get the image source from URL parameter
-        const imageUrl = getParameterByName('img'); // Replace 'imgSrc' with your parameter name
-        if (imageUrl) {
-            // Set the initial source of the image
-            $("#image").attr("src", imageUrl + "?tx=" + new Date().getTime());
-
-            // Refresh the image every 5 seconds
-            setInterval(function() {
-                var newTimestamp = new Date().getTime();
-                $("#image").attr("src", imageUrl + "?tx=" + newTimestamp);
-            }, 3000);
-        } else {
-            // If no image URL is provided, display an error message
-            alert("No image source provided. Please add '?img=your_image_url' to the URL.");
-        }
-    </script>
+    <h1>Please wait... Searching for camera info</h1>
 </body>
 </html>
