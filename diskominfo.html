@@ -33,16 +33,16 @@
 			const urlParams = new URLSearchParams(window.location.search);
 			return urlParams.get(param);
 		}
-    function changeVideoSrc(newSrc) {
-      var videoElement = document.getElementById('video_stream');
-	  if (videoElement) {
-		  videoElement.src = newSrc;
-		  videoElement.load(); // Ensure the video reloads with the new source
-		  videoElement.play(); // Optionally autoplay after the source change
-		} else {
-				console.log("No video element found on the page");
-			  }
-    }
+		    function changeVideoSrc(newSrc) {
+		      var videoElement = document.getElementById('video_stream');
+			  if (videoElement) {
+				  videoElement.src = newSrc;
+				  videoElement.load(); // Ensure the video reloads with the new source
+				  videoElement.play(); // Optionally autoplay after the source change
+				} else {
+						console.log("No video element found on the page");
+					  }
+		    }
 
 	  // URL of the page from which you want to get the video src
 	  const camId = getQueryParam('id');
@@ -66,15 +66,17 @@
 			  const videoElement = doc.querySelector("video");
 			  if (videoElement) {
 				const videoSrc = videoElement.getAttribute("src");
-				console.log("Video source URL:", videoSrc);
+				//console.log("Video source URL:", videoSrc);
 				//window.location.href = videoSrc;
 		  		changeVideoSrc(videoSrc);
 			  } else {
-				console.log("No video element found on the page");
+				//console.log("No video element found on the page");
+				  document.body.innerHTML = "No video element found on the page");;
 			  }
 			})
 			.catch(error => {
-			  console.error('Error fetching the page:', error);
+			  //console.error('Error fetching the page:', error);
+				document.body.innerHTML = 'Error fetching the page:' + error;
 			});
 		}else {
 			//console.error('Camera not found', 'no parameter');
