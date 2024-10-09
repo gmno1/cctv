@@ -14,6 +14,7 @@
 </head>
 <body>
     <h1 id="device-message"></h1>
+    <p id="screen-info"></p>
 
     <script>
         function isMobileDevice() {
@@ -31,13 +32,25 @@
             return false; // Not a mobile device
         }
 
-        // Update the HTML based on the device type
+        function getScreenInfo() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const orientation = (width > height) ? 'Landscape' : 'Portrait';
+
+            return `Screen Width: ${width}px, Screen Height: ${height}px, Orientation: ${orientation}`;
+        }
+
+        // Update the HTML based on the device type and screen info
         const deviceMessage = document.getElementById("device-message");
+        const screenInfo = document.getElementById("screen-info");
+
         if (isMobileDevice()) {
             deviceMessage.textContent = "You are using a mobile device.";
         } else {
             deviceMessage.textContent = "You are using a desktop.";
         }
+
+        screenInfo.textContent = getScreenInfo();
     </script>
 </body>
 </html>
