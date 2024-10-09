@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1 id="device-message"></h1>
+
+    <script>
+        function isMobileDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // Check for mobile user agents
+            if (/android/i.test(userAgent)) {
+                return true;
+            }
+
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return true;
+            }
+
+            return false; // Not a mobile device
+        }
+
+        // Update the HTML based on the device type
+        const deviceMessage = document.getElementById("device-message");
+        if (isMobileDevice()) {
+            deviceMessage.textContent = "You are using a mobile device.";
+        } else {
+            deviceMessage.textContent = "You are using a desktop.";
+        }
+    </script>
+</body>
+</html>
