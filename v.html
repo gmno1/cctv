@@ -34,6 +34,7 @@
 			fetch(videoPageUrl)
 				.then(response => {
 					if (!response.ok) {
+						document.getElementById('videoContainer').innerHTML = '<p>Network response was not ok</p>';
 						throw new Error('Network response was not ok');
 					}
 					return response.text();
@@ -46,6 +47,7 @@
 						//const videoSrc = videoElement.getAttribute('src');
 						document.getElementById('videoContainer').innerHTML = videoElement.outerHTML;
 					} else {
+						document.getElementById('videoContainer').innerHTML = '<p>No video available.</p>';
 						console.error('There was a problem with the fetch operation:', 'No video element found');
 					}
 					const pageTitle = doc.title;
@@ -53,6 +55,7 @@
 					document.title = title;
 				})
 				.catch(error => {
+					document.getElementById('videoContainer').innerHTML = '<p>There was a problem with the fetch operation:'+error+'</p>';
 					console.error('There was a problem with the fetch operation:', error);
 				});
 		}
