@@ -25,42 +25,56 @@
 </head>
 <body>
     <div id="videoContainer" class="stream__frame"></div>
-    <script>
+    <script>		
+        function isMobileDevice() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            if (/android/i.test(userAgent)) {
+                return true;
+            }
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return true;
+            }
+            return false;
+        }
 	    function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
-		const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
-		const camId = getQueryParam('id');
-		if (camId) {
-			const videoPageUrl = baseUrl + camId;
-			fetch(videoPageUrl)
-				.then(response => {
-					if (!response.ok) {
-						document.getElementById('videoContainer').innerHTML = '<p>Network response was not ok</p>';
-						throw new Error('Network response was not ok');
-					}
-					return response.text();
-				})
-				.then(html => {
-					const parser = new DOMParser();
-					const doc = parser.parseFromString(html, 'text/html');
-					const videoElement = doc.querySelector('video');
-					if (videoElement) {
-						//const videoSrc = videoElement.getAttribute('src');
-						document.getElementById('videoContainer').innerHTML = videoElement.outerHTML;
-					} else {
-						document.getElementById('videoContainer').innerHTML = '<p>No video available.</p>';
-						console.error('There was a problem with the fetch operation:', 'No video element found');
-					}
-					const pageTitle = doc.title;
-					const title = pageTitle.includes('::') ? pageTitle.split('::')[0].trim() : pageTitle;
-					document.title = title;
-				})
-				.catch(error => {
-					document.getElementById('videoContainer').innerHTML = '<p>There was a problem with the fetch operation:'+error+'</p>';
-					console.error('There was a problem with the fetch operation:', error);
-				});
+		if (isMobileDevice()) {
+			document.getElementById('videoContainer').innerHTML = '<p>Use Desktop site mode to view</p>';
+		} else {		
+			const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
+			const camId = getQueryParam('id');
+			if (camId) {
+				const videoPageUrl = baseUrl + camId;
+				fetch(videoPageUrl)
+					.then(response => {
+						if (!response.ok) {
+							document.getElementById('videoContainer').innerHTML = '<p>Network response was not ok</p>';
+							throw new Error('Network response was not ok');
+						}
+						return response.text();
+					})
+					.then(html => {
+						const parser = new DOMParser();
+						const doc = parser.parseFromString(html, 'text/html');
+						const videoElement = doc.querySelector('video');
+						if (videoElement) {
+							//const videoSrc = videoElement.getAttribute('src');
+							document.getElementById('videoContainer').innerHTML = videoElement.outerHTML;
+						} else {
+							document.getElementById('videoContainer').innerHTML = '<p>No video available.</p>';
+							console.error('There was a problem with the fetch operation:', 'No video element found');
+						}
+						const pageTitle = doc.title;
+						const title = pageTitle.includes('::') ? pageTitle.split('::')[0].trim() : pageTitle;
+						document.title = title;
+					})
+					.catch(error => {
+						document.getElementById('videoContainer').innerHTML = '<p>There was a problem with the fetch operation:'+error+'</p>';
+						console.error('There was a problem with the fetch operation:', error);
+					});
+			}
 		}
     </script>
 	<script type="text/javascript" src="disable.js"></script>	
