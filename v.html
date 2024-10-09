@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -81,6 +81,8 @@
 						document.getElementById('videoContainer').innerHTML = '<p>There was a problem with the fetch operation:'+error+'</p>';
 						console.error('There was a problem with the fetch operation:', error);
 					});
+			} else {
+				document.getElementById('videoContainer').innerHTML = '<p>No id parameter</p>';
 			}
 		//}
     </script>
