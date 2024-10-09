@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/png" href="https://diskominfo.samarindakota.go.id/storage/Template/favicon.png">
+    <title>CCTV</title>
+	<style type="text/css">
+		body
+		{
+			padding: 0px;
+			margin: 0px;
+		}
+		.stream__frame
+		{
+			width: 100vw;
+			height: 100vh;
+			background-color: black;
+			position: fixed;
+		}
+    </style>
+</head>
+<body>
+    <div id="videoContainer" class="stream__frame"></div>
+    <script>
+	    function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+		const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
+		const camId = getQueryParam('id');
+		if (camId) {
+			const videoPageUrl = baseUrl + camId;
+			fetch(videoPageUrl)
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.text();
+				})
+				.then(html => {
+					const parser = new DOMParser();
+					const doc = parser.parseFromString(html, 'text/html');
+					const videoElement = doc.querySelector('video');
+					if (videoElement) {
+						//const videoSrc = videoElement.getAttribute('src');
+						document.getElementById('videoContainer').innerHTML = videoElement.outerHTML;
+					} else {
+						console.error('There was a problem with the fetch operation:', 'No video element found');
+					}
+					const pageTitle = doc.title;
+					const title = pageTitle.includes('::') ? pageTitle.split('::')[0].trim() : pageTitle;
+					document.title = title;
+				})
+				.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+				});
+		}
+    </script>
+	<script type="text/javascript" src="cctv.js"></script>	
+</body>
+</html>
