@@ -47,9 +47,9 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
-		if (isMobileDevice()) {
+		/*if (isMobileDevice()) {
 			document.getElementById('videoContainer').innerHTML = '<p>Use Desktop site mode to view</p>';
-		} else {		
+		} else {	*/	
 			const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
 			const camId = getQueryParam('id');
 			if (camId) {
@@ -82,7 +82,7 @@
 						console.error('There was a problem with the fetch operation:', error);
 					});
 			}
-		}
+		//}
     </script>
 	<script type="text/javascript" src="disable.js"></script>	
 </body>
