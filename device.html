@@ -14,6 +14,7 @@
 </head>
 <body>
     <h1 id="device-message"></h1>
+    <p id="agent-info"></p>
     <p id="screen-info"></p>
 
     <script>
@@ -21,15 +22,8 @@
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
             // Check for mobile user agents
-            if (/android/i.test(userAgent)) {
-                return true;
-            }
-
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                return true;
-            }
-
-            return false; // Not a mobile device
+            return /android/i.test(userAgent) || 
+                   (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream);
         }
 
         function getScreenInfo() {
@@ -37,20 +31,21 @@
             const height = window.innerHeight;
             const orientation = (width > height) ? 'Landscape' : 'Portrait';
 
-            return `Screen Width: ${width}px, Screen Height: ${height}px, Orientation: ${orientation}`;
+            return `Screen Width: ${width}px<br>Screen Height: ${height}px<br>Orientation: ${orientation}`;
         }
 
         // Update the HTML based on the device type and screen info
         const deviceMessage = document.getElementById("device-message");
+        const agentInfo = document.getElementById("agent-info");
         const screenInfo = document.getElementById("screen-info");
 
-        if (isMobileDevice()) {
-            deviceMessage.textContent = "You are using a mobile device.";
-        } else {
-            deviceMessage.textContent = "You are using a desktop.";
-        }
-
-        screenInfo.textContent = getScreenInfo();
+        deviceMessage.textContent = isMobileDevice() ? "You are using a mobile device." : "You are using a desktop.";
+        agentInfo.textContent = navigator.userAgent || navigator.vendor || window.opera;
+        screenInfo.innerHTML = getScreenInfo();
+		
+		window.addEventListener('resize', function() {
+			screenInfo.textContent = getScreenInfo();
+		});
     </script>
 </body>
 </html>
