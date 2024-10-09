@@ -78,7 +78,7 @@
 						document.title = title;
 					})
 					.catch(error => {
-						document.getElementById('videoContainer').innerHTML = '<p>There was a problem with the fetch operation:'+error+'</p>';
+						document.getElementById('videoContainer').innerHTML = '<p>There was a problem with the fetch operation:<br>'+error+'</p>';
 						console.error('There was a problem with the fetch operation:', error);
 					});
 			} else {
