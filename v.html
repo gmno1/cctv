@@ -1,16 +1,16 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" type="image/png" href="https://diskominfo.samarindakota.go.id/storage/Template/favicon.png">
+    <link rel="icon" type="image/png" href="https://diskominfo.samarindakota.go.id/storage/Template/favicon.png">
     <title>CCTV</title>
 	<style type="text/css">
 		body
 		{
 			padding: 0px;
 			margin: 0px;
-    		overflow: hidden; /* Prevents scrolling */
+			overflow: hidden; /* Prevents scrolling */
 		}
 		p {
 			font-family: Arial, sans-serif;
@@ -25,8 +25,8 @@
 			height: 100vh;
 			background-color: black;
 			position: fixed;
-		    top: 0; /* Ensure it's at the top */
-		    left: 0; /* Ensure it's at the left */
+			top: 0; /* Ensure it's at the top */
+			left: 0; /* Ensure it's at the left */
 		}
     </style>
 </head>
@@ -43,13 +43,13 @@
             }
             return false;
         }
-	    function getQueryParam(param) {
+	function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
-		/*if (isMobileDevice()) {
+		*if (isMobileDevice()) {
 			document.getElementById('videoContainer').innerHTML = '<p>Use Desktop site mode to view</p>';
-		} else {	*/	
+		} else {		
 			const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
 			const camId = getQueryParam('id');
 			if (camId) {
@@ -84,7 +84,7 @@
 			} else {
 				document.getElementById('videoContainer').innerHTML = '<p>No id parameter</p>';
 			}
-		//}
+		}
     </script>
 	<script type="text/javascript" src="disable.js"></script>	
 </body>
