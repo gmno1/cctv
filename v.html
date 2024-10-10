@@ -50,7 +50,7 @@
 	const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
 	const camId = getQueryParam('id');	    
 	if (isMobileDevice()) {
-		document.getElementById('videoContainer').innerHTML = '<p>Gunakan Desktop site mode untuk membuka video<br>atau<br>open<br><a href="'
+		document.getElementById('videoContainer').innerHTML = '<p>Gunakan Desktop site mode untuk membuka video<br>atau<br><a href="'
 			+baseUrl+camId+'" style="color: yellow;">Klik di sini</a></p>';
 	} else {		
 		if (camId) {
