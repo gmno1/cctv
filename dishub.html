@@ -69,7 +69,7 @@
 		    const videoElement = document.getElementById('videoElement');
 		    const videoSource = document.getElementById('videoSource');
                     videoSource.src = cameraInfo.streamingURL;
-		    videoElement.load();
+		    videoElement.load();	// load picture -> replace &format=fmp4& -> &format=jpeg&
                 } else {
                     document.body.innerHTML = 'Camera not found';
                     //window.location.href = 'https://dishub.kaltimprov.go.id/semua-cctv';
