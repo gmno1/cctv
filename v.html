@@ -47,12 +47,12 @@
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
-	    
+	const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
+	const camId = getQueryParam('id');	    
 	if (isMobileDevice()) {
-		document.getElementById('videoContainer').innerHTML = '<p>Use Desktop site mode to view</p>';
+		document.getElementById('videoContainer').innerHTML = '<p>Use Desktop site mode to view or open this <a href="'
+			+'https://diskominfo.samarindakota.go.id/media/cctv/'+camId+'">link</a></p>';
 	} else {		
-		const baseUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
-		const camId = getQueryParam('id');
 		if (camId) {
 			const videoPageUrl = baseUrl + camId;
 			fetch(videoPageUrl)
