@@ -18,7 +18,14 @@
         .stream__frame {
             max-width: 100%; 
             max-height: 100%;
-       }
+        }
+	p {
+		font-family: Arial, sans-serif;
+		text-align: center;
+		margin-top: 50px;
+		background-color: black;
+		color: white;
+	}
     </style>
 </head>
 <body oncontextmenu="return false">
@@ -73,14 +80,14 @@
 					const videoSrc = videoElement.getAttribute("src");
 			  		changeVideoSrc(videoSrc);
 				  } else {
-					  document.body.innerHTML = "No video element found on the page";
+					  document.body.innerHTML = "<p>No video element found on the page</p>";
 				  }
 				})
 				.catch(error => {
-					document.body.innerHTML = 'Error fetching the page:' + error;
+					document.body.innerHTML = '<p>Error fetching the page<br>' + error+'</p>';
 				});
 			}else {
-				document.body.innerHTML = 'Camera not found, no parameter';
+				document.body.innerHTML = '<p>Camera not found, no parameter</p>';
 				window.location.href = 'https://diskominfo.samarindakota.go.id/media/cctv/';
 			}	
 	</script>
