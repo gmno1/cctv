@@ -51,7 +51,7 @@
 	const camId = getQueryParam('id');	    
 	if (isMobileDevice()) {
 		document.getElementById('videoContainer').innerHTML = '<p>Gunakan Desktop site mode untuk membuka video<br>atau<br>open<br><a href="'
-			+baseUrl+camId+'" style="color: red;">Klik di sini</a></p>';
+			+baseUrl+camId+'" style="color: yellow;">Klik di sini</a></p>';
 	} else {		
 		if (camId) {
 			const videoPageUrl = baseUrl + camId;
