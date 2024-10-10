@@ -6,18 +6,18 @@
     <title>CCTV Diskominfo</title>
     <style>
         body, html {
-            margin: 0; /* Remove default margin */
-            padding: 0; /* Remove default padding */
-            height: 100%; /* Full height for body and html */
-            overflow: hidden; /* Hide scrollbars */
-            display: flex; /* Flexbox to center the image */
-            align-items: center; /* Center vertically */
-            justify-content: center; /* Center horizontally */
-            background-color: black; /* Optional: set background color */
+            margin: 0; 
+            padding: 0; 
+            height: 100%; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background-color: black; 
         }
         .stream__frame {
-            max-width: 100%; /* Maximum width */
-            max-height: 100%; /* Maximum height */
+            max-width: 100%; 
+            max-height: 100%;
        }
     </style>
 </head>
@@ -28,62 +28,61 @@
          type="video/fmp4">
   </video>
 	<script>
-		// Function to get URL parameters
+	        function isMobileDevice() {
+	            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+	            if (/android/i.test(userAgent)) {
+	                return true;
+	            }
+	            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+	                return true;
+	            }
+	            return false;
+	        }
 		function getQueryParam(param) {
 			const urlParams = new URLSearchParams(window.location.search);
 			return urlParams.get(param);
 		}
-		    function changeVideoSrc(newSrc) {
-		      var videoElement = document.getElementById('video_stream');
-			  if (videoElement) {
-				  videoElement.src = newSrc;
-				  videoElement.load(); // Ensure the video reloads with the new source
-				  videoElement.play(); // Optionally autoplay after the source change
-				} else {
-						console.log("No video element found on the page");
-					  }
-		    }
-
-	  // URL of the page from which you want to get the video src
-	  const camId = getQueryParam('id');
-	  if(camId) {
-		  const url = "https://diskominfo.samarindakota.go.id/api/cctv/" + camId;
-		  
-		  // Fetch the HTML content of the URL
-		  fetch(url)
-			.then(response => {
-			  if (!response.ok) {
-				throw new Error('Network response was not ok');
-			  }
-			  return response.text();
-			})
-			.then(html => {
-			  // Parse the HTML
-			  const parser = new DOMParser();
-			  const doc = parser.parseFromString(html, 'text/html');
-
-			  // Find the video element and get its src attribute
-			  const videoElement = doc.querySelector("video");
-			  if (videoElement) {
-				const videoSrc = videoElement.getAttribute("src");
-				//console.log("Video source URL:", videoSrc);
-				//window.location.href = videoSrc;
-		  		changeVideoSrc(videoSrc);
-			  } else {
-				//console.log("No video element found on the page");
-				  document.body.innerHTML = "No video element found on the page");;
-			  }
-			})
-			.catch(error => {
-			  //console.error('Error fetching the page:', error);
-				document.body.innerHTML = 'Error fetching the page:' + error;
-			});
-		}else {
-			//console.error('Camera not found', 'no parameter');
-			document.body.innerHTML = 'Camera not found';
-			window.location.href = 'https://diskominfo.samarindakota.go.id/media/cctv/';
+		function changeVideoSrc(newSrc) {
+			var videoElement = document.getElementById('video_stream');
+			if (videoElement) {
+				videoElement.src = newSrc;
+				videoElement.load(); 
+				videoElement.play(); 
+			} else {
+				console.log("No video element found on the page");
+			}
 		}
-
+		  const camId = getQueryParam('id');
+		  if(camId) {
+			  const url = "https://diskominfo.samarindakota.go.id/api/cctv/" + camId;
+			  fetch(url)
+				.then(response => {
+				  if (!response.ok) {
+					throw new Error('Network response was not ok');
+				  }
+				  return response.text();
+				})
+				.then(html => {
+				  const parser = new DOMParser();
+				  const doc = parser.parseFromString(html, 'text/html');
+				  const pageTitle = doc.title;
+				  const title = pageTitle.includes('::') ? pageTitle.split('::')[0].trim() : pageTitle;
+				  document.title = title;
+				  const videoElement = doc.querySelector("video");
+				  if (videoElement) {
+					const videoSrc = videoElement.getAttribute("src");
+			  		changeVideoSrc(videoSrc);
+				  } else {
+					  document.body.innerHTML = "No video element found on the page");;
+				  }
+				})
+				.catch(error => {
+					document.body.innerHTML = 'Error fetching the page:' + error;
+				});
+			}else {
+				document.body.innerHTML = 'Camera not found, no parameter';
+				window.location.href = 'https://diskominfo.samarindakota.go.id/media/cctv/';
+			}	
 	</script>
  </body>
 </html>
