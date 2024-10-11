@@ -284,7 +284,10 @@
 			const img = document.createElement('img');
 			img.src = srcurl; // Example placeholder image
 			img.alt = item.title; // Add alt text for accessibility
-
+		      // Add fallback text when image fails to load
+		      img.onerror = () => {
+			gridItem.innerHTML = '<div style="color: white; background-color: black; text-align: center; height: 100%; display: flex; justify-content: center; align-items: center;">Image not available</div>';
+		      };				
 			// Add click event to show the image in fullscreen
 			img.addEventListener('click', () => {
 					  // Hide the link list if it is currently visible
