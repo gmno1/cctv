@@ -428,6 +428,8 @@
 
     // Function to handle button clicks
     function handleButtonClick(buttonId) {
+      const playbtn = document.getElementById('play-btn');
+      const stopbtn = document.getElementById('stop-btn');
       switch (buttonId) {
         case 'fullscreen-btn':
           toggleFullscreen();
@@ -445,11 +447,15 @@
           break;
         case 'play-btn':
           //alert('Play button clicked');
-	  alert(window.innerWidth+' / '+window.innerHeight);
+	  //alert(window.innerWidth+' / '+window.innerHeight);
+          playbtn.style.display = 'none';
+          stopbtn.style.display = 'block';
           // Add play functionality here
           break;
         case 'stop-btn':
-          alert('Stop button clicked');
+          playbtn.style.display = 'block';
+          stopbtn.style.display = 'none';
+          //alert('Stop button clicked');
           // Add stop functionality here
           break;
         case 'prev-btn':
