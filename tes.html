@@ -285,9 +285,24 @@
 			img.src = srcurl; // Example placeholder image
 			img.alt = item.title; // Add alt text for accessibility
 		      // Add fallback text when image fails to load
-		      img.onerror = () => {
+		      /*img.onerror = () => {
 			gridItem.innerHTML = '<div style="color: white; background-color: black; text-align: center; height: 100%; display: flex; justify-content: center; align-items: center;">Image not available</div>';
-		      };				
+		      };*/		
+// Add fallback text using the img.alt when the image fails to load
+      img.onerror = () => {
+        const fallbackText = document.createElement('div');
+        fallbackText.style.color = 'white';
+        fallbackText.style.backgroundColor = 'black';
+        fallbackText.style.textAlign = 'center';
+        fallbackText.style.height = '100%';
+        fallbackText.style.display = 'flex';
+        fallbackText.style.justifyContent = 'center';
+        fallbackText.style.alignItems = 'center';
+        fallbackText.textContent = img.alt; // Use the image alt as fallback text
+        
+        gridItem.innerHTML = ''; // Clear previous content
+        gridItem.appendChild(fallbackText); // Add the fallback text
+      };				
 			// Add click event to show the image in fullscreen
 			img.addEventListener('click', () => {
 					  // Hide the link list if it is currently visible
