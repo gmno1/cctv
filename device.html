@@ -47,6 +47,22 @@
             return `Screen Width: ${width}px<br>Screen Height: ${height}px<br>Orientation: ${orientation}`;
         }
 
+	    function detectDeviceByScreen() {
+    const width = window.screen.width;
+    const height = window.screen.height;
+    const aspectRatio = width / height;
+
+    // Define thresholds for mobile and desktop
+    const isMobile = (width <= 768) || (aspectRatio < 0.75);
+
+    if (isMobile) {
+        console.log("The user is on a mobile device.");
+    } else {
+        console.log("The user is on a desktop.");
+    }
+}
+
+detectDeviceByScreen();
         // Update the HTML based on the device type and screen info
         const deviceMessage = document.getElementById("device-message");
         const deviceMessage2 = document.getElementById("device-message2");
@@ -58,7 +74,7 @@
 
         deviceMessage.textContent = isMobileDevice() ? "0. Mobile" : "0. Desktop";
         deviceMessage2.textContent = isMobile() ? "1. Mobile" : "1. Desktop";
-        deviceMessage3.textContent = isMobile2() ? "2. Mobile" : "2. Desktop";
+        deviceMessage3.textContent = detectDeviceByScreen() ? "2. Mobile" : "2. Desktop";
         agentInfo.textContent = navigator.userAgent || navigator.vendor || window.opera;
         agentInfo2.textContent = navigator.userAgentData;
         agentInfo3.textContent = navigator.userAgent;
