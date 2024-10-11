@@ -180,9 +180,12 @@
   </div>
 
   <script>
-	var jsonUrl = 'diskominfo.json';
+	var jsonUrl = 'data.json';
 	var imgIndex = 0;
 	var totalCells = 0;
+	var dataCount = -1;
+	var dataJson;
+
 	const groupId = getQueryParam('id');
 	function getQueryParam(param) {
 		const urlParams = new URLSearchParams(window.location.search);
@@ -247,72 +250,80 @@
       gridContainer.appendChild(linkList);
     }
 	*/
-	async function createGridItem() {
+	async function loadData() {
+		//console.log('loadData');
 		try {
-			  const gridContainer = document.getElementById('grid-container');
-			  const linkList = document.getElementById('link-list');
-
-			  if (linkList.parentNode) {
-				gridContainer.removeChild(linkList);
-			  }
-
-			  // Remove any previous images (if any)
-			  gridContainer.innerHTML = '';
 			const response = await fetch(jsonUrl);
 			if (!response.ok) {
 			  throw new Error('Network response was not ok');
 			}
-			const data = await response.json(); // Convert the response to JSON
-			data.slice(imgIndex, imgIndex+totalCells).forEach(item => { 
-				const gridItem = document.createElement('div');
-				gridItem.classList.add('grid-item');
-				var srcurl = item.url+'/cover';
-				srcurl = srcurl.replace('/media/','/api/');
-				console.log(srcurl);
-				const img = document.createElement('img');
-				img.src = srcurl; // Example placeholder image
-				img.alt = item.title; // Add alt text for accessibility
+			dataJson = await response.json();
+			dataCount = dataJson.length;
+			console.log('dataCount='+dataCount);
+			createGridItem()
+		} catch (error) {
+			console.error('There has been a problem with your fetch operation:', error);
+		}
+	}
+	async function createGridItem() {
+		//console.log('createGridItem');
+		try {
+			const gridContainer = document.getElementById('grid-container');
+			const linkList = document.getElementById('link-list');
+			if (linkList.parentNode) {
+				gridContainer.removeChild(linkList);
+			}
+			gridContainer.innerHTML = '';
+			dataJson.slice(imgIndex, imgIndex+totalCells).forEach(item => { 
+			const gridItem = document.createElement('div');
+			gridItem.classList.add('grid-item');
+			var srcurl = item.url+'/cover';
+			srcurl = srcurl.replace('/media/','/api/');
+			console.log(srcurl);
+			const img = document.createElement('img');
+			img.src = srcurl; // Example placeholder image
+			img.alt = item.title; // Add alt text for accessibility
 
-				// Add click event to show the image in fullscreen
-				img.addEventListener('click', () => {
-						  // Hide the link list if it is currently visible
-				  const linkList = document.getElementById('link-list');
-				  if (linkList.style.display === 'block') {
-					linkList.style.display = 'none';
-				  } else {
-					// Create fullscreen overlay if the link list is not visible
-					  const fullImg = document.createElement('img');
-					  fullImg.src = img.src;
-					  fullImg.style.width = '100vw';
-					  fullImg.style.height = '100vh';
-					  fullImg.style.objectFit = 'contain'; // Maintain aspect ratio
+			// Add click event to show the image in fullscreen
+			img.addEventListener('click', () => {
+					  // Hide the link list if it is currently visible
+			  const linkList = document.getElementById('link-list');
+			  if (linkList.style.display === 'block') {
+				linkList.style.display = 'none';
+			  } else {
+				// Create fullscreen overlay if the link list is not visible
+				  const fullImg = document.createElement('img');
+				  fullImg.src = img.src;
+				  fullImg.style.width = '100vw';
+				  fullImg.style.height = '100vh';
+				  fullImg.style.objectFit = 'contain'; // Maintain aspect ratio
 
-					  const overlay = document.createElement('div');
-					  overlay.style.position = 'fixed';
-					  overlay.style.top = '0';
-					  overlay.style.left = '0';
-					  overlay.style.width = '100%';
-					  overlay.style.height = '100%';
-					  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-					  overlay.style.display = 'flex';
-					  overlay.style.justifyContent = 'center';
-					  overlay.style.alignItems = 'center';
-					  overlay.style.zIndex = '1000';
-					  overlay.onclick = () => document.body.removeChild(overlay); // Remove overlay on click
+				  const overlay = document.createElement('div');
+				  overlay.style.position = 'fixed';
+				  overlay.style.top = '0';
+				  overlay.style.left = '0';
+				  overlay.style.width = '100%';
+				  overlay.style.height = '100%';
+				  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+				  overlay.style.display = 'flex';
+				  overlay.style.justifyContent = 'center';
+				  overlay.style.alignItems = 'center';
+				  overlay.style.zIndex = '1000';
+				  overlay.onclick = () => document.body.removeChild(overlay); // Remove overlay on click
 
-					  overlay.appendChild(fullImg);
-					  document.body.appendChild(overlay);
-				  }
-				});
-				gridItem.appendChild(img);
-				gridContainer.appendChild(gridItem);
+				  overlay.appendChild(fullImg);
+				  document.body.appendChild(overlay);
+			  }
+			});
+			gridItem.appendChild(img);
+			gridContainer.appendChild(gridItem);
 			});
 			gridContainer.appendChild(linkList);
 		} catch (error) {
 			console.error('There has been a problem with your fetch operation:', error);
 		}
 	} 
-    function createGrid() {
+   function createGrid() {
       const gridContainer = document.getElementById('grid-container');
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
@@ -379,7 +390,8 @@
       gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
       // Add grid items with images
       totalCells = columns * rows;
-	  createGridItem();
+      if (dataCount<0) { loadData(); }
+      else { createGridItem(); }
 	//	addImagesToGrid(totalCells);
       // Re-append the link list back into the grid-container
       //gridContainer.appendChild(linkList);
