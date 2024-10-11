@@ -277,7 +277,8 @@
 			dataJson.slice(imgIndex, imgIndex+totalCells).forEach(item => { 
 			const gridItem = document.createElement('div');
 			gridItem.classList.add('grid-item');
-			var srcurl = item.url+'/cover?t='+ new Date().gettime();
+			var newTimestamp = new Date().getTime();
+			var srcurl = item.url+'/cover?t=' + newTimestamp;
 			srcurl = srcurl.replace('/media/','/api/');
 			console.log(srcurl);
 			const img = document.createElement('img');
