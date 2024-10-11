@@ -44,6 +44,7 @@
       width: 100%;
       height: 100%;
       object-fit: fill; /* Stretch image without maintaining aspect ratio */
+      cursor: pointer; /* Change cursor to indicate clickable */
     }
 
     #menu {
@@ -165,7 +166,7 @@
 
     <div id="menu">
       <button id="fullscreen-btn">⛶</button> <!-- Fullscreen icon -->
-      <button id="menu-btn">☰</button> <!-- Menu icon -->
+      <button id="menu-btn">📜</button> <!-- Menu icon -->
       <button id="refresh-btn">🔄</button> <!-- Refresh icon -->
       <button id="play-btn">▶️</button> <!-- Play icon -->
       <button id="stop-btn">⏹️</button> <!-- Stop icon -->
@@ -180,7 +181,7 @@
     function createGrid() {
       const gridContainer = document.getElementById('grid-container');
       const linkList = document.getElementById('link-list');
-      
+
       // Temporarily remove the link list from the DOM before clearing the grid
       if (linkList.parentNode) {
         gridContainer.removeChild(linkList);
@@ -190,25 +191,37 @@
       const screenHeight = window.innerHeight;
       let columns, rows;
 
+      const splitHeight = 800;
+      const splitWidth = 600;
       // Determine columns and rows based on screen dimensions
-      if (screenWidth < 1000 && screenWidth < screenHeight) {
+      if (screenHeight < splitHeight && screenWidth < screenHeight) {
         // Portrait with width < 1000
+		console.log('a');
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-      } else if (screenWidth >= 1000 && screenWidth < screenHeight) {
+      } else if (screenHeight >= splitHeight && screenWidth < screenHeight) {
         // Portrait with width >= 1000
+		console.log('b');
         columns = 2;
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
-      } else if (screenWidth < 1000 && screenWidth > screenHeight) {
+      } else if (screenWidth < splitWidth && screenWidth > screenHeight) {
         // Landscape with width < 1000
+		console.log('c');
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-      } else if (screenWidth >= 1000 && screenWidth > screenHeight) {
+      } else if (screenWidth >= splitWidth && screenWidth > screenHeight) {
         // Landscape with width >= 1000
+		console.log('d');
         columns = 2;
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+      } else if (screenWidth < splitWidth) {
+        // Near-square screen (3 rows, 2 columns)
+		console.log('e');
+        columns = 1;
+        rows = 2;
       } else {
         // Near-square screen (3 rows, 2 columns)
+		console.log('a');
         columns = 2;
         rows = 3;
       }
@@ -228,8 +241,34 @@
 
         const img = document.createElement('img');
         img.src = 'https://via.placeholder.com/1600x900'; // Example placeholder image
-        gridItem.appendChild(img);
+        img.alt = 'Grid Image'; // Add alt text for accessibility
 
+        // Add click event to show the image in fullscreen
+        img.addEventListener('click', () => {
+          const fullImg = document.createElement('img');
+          fullImg.src = img.src;
+          fullImg.style.width = '100vw';
+          fullImg.style.height = '100vh';
+          fullImg.style.objectFit = 'contain'; // Maintain aspect ratio
+
+          const overlay = document.createElement('div');
+          overlay.style.position = 'fixed';
+          overlay.style.top = '0';
+          overlay.style.left = '0';
+          overlay.style.width = '100%';
+          overlay.style.height = '100%';
+          overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+          overlay.style.display = 'flex';
+          overlay.style.justifyContent = 'center';
+          overlay.style.alignItems = 'center';
+          overlay.style.zIndex = '1000';
+          overlay.onclick = () => document.body.removeChild(overlay); // Remove overlay on click
+
+          overlay.appendChild(fullImg);
+          document.body.appendChild(overlay);
+        });
+
+        gridItem.appendChild(img);
         gridContainer.appendChild(gridItem);
       }
 
@@ -255,20 +294,20 @@
       switch (buttonId) {
         case 'fullscreen-btn':
           toggleFullscreen();
-          alert('Fullscreen button clicked');
+          //alert('Fullscreen button clicked');
           break;
         case 'menu-btn':
           const linkList = document.getElementById('link-list');
           linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
-          alert('Menu button clicked');
+          //alert('Menu button clicked');
           break;
         case 'refresh-btn':
           location.reload(); // Refresh the page
-          alert('Page is refreshing...');
+          //alert('Page is refreshing...');
           break;
         case 'play-btn':
           //alert('Play button clicked');
-		  alert('Width: '+window.innerWidth+'/ Height: '+window.innerHeight)
+		  alert(window.innerWidth+' / '+window.innerHeight);
           // Add play functionality here
           break;
         case 'stop-btn':
