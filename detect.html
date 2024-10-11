@@ -1,0 +1,17 @@
+<html>
+  <body>
+    <script src="detect.js"></script>
+    <script>
+      var detect = require('detect');
+      var ua = detect.parse(navigator.userAgent);
+      document.write('<div>family='+ua.browser.family+'</div>');
+      document.write('<div>name='+ua.browser.name+'</div>');
+      document.write('<div>version='+ua.browser.version+'</div>');
+      document.write('<div>major='+ua.browser.major+'</div>');
+      document.write('<div>minor='+ua.browser.minor+'</div>');
+      document.write('<div>patch='+ua.browser.patch+'</div>');
+      document.write('<div>type='+ua.browser.type+'</div>');
+      document.write('<div>manufacturer='+ua.browser.manufacturer+'</div>');
+    </script>
+  </body>
+</html>
