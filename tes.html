@@ -4,137 +4,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    body {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 
-    #main-content {
-      display: flex;
-      flex-grow: 1;
-      overflow: hidden;
-      position: relative;
-    }
+#main-content {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  position: relative;
+}
 
-    #grid-container {
-      flex-grow: 1;
-      display: grid;
-      gap: 1px;
-      border: 1px solid black;
-      background-color: black;
-      position: relative; /* Makes the grid-container the positioning context */
-    }
+#grid-container {
+  flex-grow: 1;
+  display: grid;
+  gap: 1px;
+  border: 1px solid black;
+  background-color: black;
+  position: relative; /* Makes the grid-container the positioning context */
+}
 
-    .grid-item {
-      position: relative;
-      border: 1px solid black;
-    }
+.grid-item {
+  position: relative;
+  border: 1px solid black;
+}
 
-    .grid-item img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: fill; /* Stretch image without maintaining aspect ratio */
-    }
+.grid-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* Stretch image without maintaining aspect ratio */
+}
 
-    #menu {
-      display: flex;
-      background-color: #333;
-      color: white;
-      gap: 5px;
-      padding: 10px;
-    }
+#menu {
+  display: flex;
+  background-color: #333;
+  color: white;
+  gap: 5px;
+  padding: 10px;
+}
 
-    #menu button {
-      background-color: #555;
-      color: white;
-      border: none;
-      padding: 10px;
-      cursor: pointer;
-    }
+#menu button {
+  background-color: #555;
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
 
-    #menu button:hover {
-      background-color: #777;
-    }
+#menu button:hover {
+  background-color: #777;
+}
 
-    /* Centered link list overlay within the grid */
-    #link-list {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      color: black;
-      padding: 20px;
-      border: 1px solid #ccc;
-      z-index: 100;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    }
+/* Centered link list overlay within the grid */
+#link-list {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  color: black;
+  padding: 20px;
+  border: 1px solid #ccc;
+  z-index: 100;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
 
-    #link-list ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+#link-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-    #link-list ul li {
-      margin: 10px 0;
-    }
+#link-list ul li {
+  margin: 10px 0;
+}
 
-    #link-list ul li a {
-      text-decoration: none;
-      color: #333;
-      font-size: 16px;
-    }
+#link-list ul li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 16px;
+}
 
-    /* Portrait: menu at the bottom */
-    @media (orientation: portrait) {
-      body {
-        flex-direction: column;
-      }
+/* Portrait: menu at the bottom and buttons stretch */
+@media (orientation: portrait) {
+  body {
+    flex-direction: column;
+  }
 
-      #menu {
-        flex-direction: row;
-        width: 100%;
-        justify-content: space-between;
-      }
+  #menu {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-items: stretch; /* Stretch buttons in portrait mode */
+  }
 
-      #main-content {
-        flex-direction: column;
-      }
-    }
+  #menu button {
+    flex-grow: 1; /* Buttons stretch to fill available space */
+  }
 
-    /* Landscape: menu on the right */
-    @media (orientation: landscape) {
-      body {
-        flex-direction: row;
-      }
+  #main-content {
+    flex-direction: column;
+  }
+}
 
-      #menu {
-        flex-direction: column;
-        width: auto;
-        height: 100%;
-        justify-content: flex-start;
-      }
+/* Landscape: menu on the right and buttons stretch */
+@media (orientation: landscape) {
+  body {
+    flex-direction: row;
+  }
 
-      #main-content {
-        flex-direction: row;
-      }
+  #menu {
+    flex-direction: column;
+    width: auto;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: stretch; /* Stretch buttons in landscape mode */
+  }
 
-      #grid-container {
-        width: calc(100% - 100px); /* Adjust grid width to leave space for menu */
-      }
-    }
+  #menu button {
+    flex-grow: 1; /* Buttons stretch to fill available space */
+  }
+
+  #main-content {
+    flex-direction: row;
+  }
+
+  #grid-container {
+    width: calc(100% - 100px); /* Adjust grid width to leave space for menu */
+  }
+}
+
   </style>
 </head>
 <body>
@@ -152,7 +163,7 @@
 
     <div id="menu">
       <button id="menu-btn">Menu</button>
-      <button id="refresh-btn">Refresh</button>
+      <button id="refresh-btn" onclick="toggleFullscreen();">Refresh</button>
       <button id="play-btn">Play</button>
       <button id="stop-btn">Stop</button>
       <button id="prev-btn">Prev</button>
@@ -163,6 +174,37 @@
   </div>
 
   <script>
+  function openFullscreen(elem) {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { // Firefox
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { // IE/Edge
+    elem.msRequestFullscreen();
+  }
+}
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.mozCancelFullScreen) { // Firefox
+    document.mozCancelFullScreen();
+  } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { // IE/Edge
+    document.msExitFullscreen();
+  }
+}
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    // Enter fullscreen
+    openFullscreen(document.documentElement);
+  } else {
+    // Exit fullscreen
+    closeFullscreen();
+  }
+}
     function createGrid() {
   const gridContainer = document.getElementById('grid-container');
   const linkList = document.getElementById('link-list');
