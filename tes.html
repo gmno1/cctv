@@ -298,7 +298,7 @@
         fallbackText.style.display = 'flex';
         fallbackText.style.justifyContent = 'center';
         fallbackText.style.alignItems = 'center';
-        fallbackText.textContent = img.alt; // Use the image alt as fallback text
+        fallbackText.textContent = img.alt + '<br>not available'; // Use the image alt as fallback text
         
         gridItem.innerHTML = ''; // Clear previous content
         gridItem.appendChild(fallbackText); // Add the fallback text
