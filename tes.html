@@ -249,8 +249,15 @@
 	*/
 	async function createGridItem() {
 		try {
-			const gridContainer = document.getElementById('grid-container');
-			gridContainer.innerHTML = '';
+			  const gridContainer = document.getElementById('grid-container');
+			  const linkList = document.getElementById('link-list');
+
+			  if (linkList.parentNode) {
+				gridContainer.removeChild(linkList);
+			  }
+
+			  // Remove any previous images (if any)
+			  gridContainer.innerHTML = '';
 			const response = await fetch(jsonUrl);
 			if (!response.ok) {
 			  throw new Error('Network response was not ok');
@@ -300,6 +307,7 @@
 				gridItem.appendChild(img);
 				gridContainer.appendChild(gridItem);
 			});
+			gridContainer.appendChild(linkList);
 		} catch (error) {
 			console.error('There has been a problem with your fetch operation:', error);
 		}
@@ -431,12 +439,13 @@
           //alert('Menu button clicked');
           break;
         case 'refresh-btn':
-          location.reload(); // Refresh the page
+          //location.reload(); // Refresh the page
+	  createGridItem();	
           //alert('Page is refreshing...');
           break;
         case 'play-btn':
           //alert('Play button clicked');
-		  alert(window.innerWidth+' / '+window.innerHeight);
+	  alert(window.innerWidth+' / '+window.innerHeight);
           // Add play functionality here
           break;
         case 'stop-btn':
@@ -444,14 +453,17 @@
           // Add stop functionality here
           break;
         case 'prev-btn':
-          alert('Previous button clicked');
+          //alert('Previous button clicked');
+	  imgIndex = imgIndex - totalCells;
+	  if(imgIndex<0) { imgIndex = 0; }
+	  createGridItem();		      
           // Add previous functionality here
           break;
         case 'next-btn':
           //alert('Next button clicked');
           // Add next functionality here
-		  imgIndex = imgIndex + totalCells;
-		  createGridItem();
+	  imgIndex = imgIndex + totalCells;
+	  createGridItem();
           break;
         case 'zoom-in-btn':
           alert('Zoom In button clicked');
