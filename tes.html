@@ -52,6 +52,7 @@
       color: white;
       gap: 5px;
       padding: 10px;
+      overflow-y: auto; /* Enable vertical scrolling */
     }
 
     #menu button {
@@ -132,6 +133,7 @@
         height: 100%;
         justify-content: flex-start;
         align-items: stretch; /* Stretch buttons in landscape mode */
+        overflow-y: auto; /* Enable vertical scrolling */
       }
 
       #menu button {
@@ -163,7 +165,7 @@
 
     <div id="menu">
       <button id="fullscreen-btn">⛶</button> <!-- Fullscreen icon -->
-      <button id="menu-btn">📜</button> <!-- Menu icon -->
+      <button id="menu-btn">☰</button> <!-- Menu icon -->
       <button id="refresh-btn">🔄</button> <!-- Refresh icon -->
       <button id="play-btn">▶️</button> <!-- Play icon -->
       <button id="stop-btn">⏹️</button> <!-- Stop icon -->
@@ -188,29 +190,23 @@
       const screenHeight = window.innerHeight;
       let columns, rows;
 
-      const splitHeight = 800;
-      const splitWidth = 600;
       // Determine columns and rows based on screen dimensions
-      if (screenHeight < splitHeight && screenWidth < screenHeight) {
+      if (screenWidth < 1000 && screenWidth < screenHeight) {
         // Portrait with width < 1000
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-      } else if (screenHeight >= splitHeight && screenWidth < screenHeight) {
+      } else if (screenWidth >= 1000 && screenWidth < screenHeight) {
         // Portrait with width >= 1000
         columns = 2;
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
-      } else if (screenWidth < splitWidth && screenWidth > screenHeight) {
+      } else if (screenWidth < 1000 && screenWidth > screenHeight) {
         // Landscape with width < 1000
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-      } else if (screenWidth >= splitWidth && screenWidth > screenHeight) {
+      } else if (screenWidth >= 1000 && screenWidth > screenHeight) {
         // Landscape with width >= 1000
         columns = 2;
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
-      } else if (screenWidth < splitWidth) {
-        // Near-square screen (3 rows, 2 columns)
-        columns = 1;
-        rows = 2;
       } else {
         // Near-square screen (3 rows, 2 columns)
         columns = 2;
@@ -245,7 +241,7 @@
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
-          console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+          alert(`Error attempting to enable full-screen mode: ${err.message}`);
         });
       } else {
         if (document.exitFullscreen) {
@@ -254,29 +250,65 @@
       }
     }
 
-    // Event listener for the fullscreen button
-    document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
-
-    // Menu button click event to toggle the link list overlay
-    document.getElementById('menu-btn').addEventListener('click', function() {
-      const linkList = document.getElementById('link-list');
-      linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Close the overlay if clicked outside
-    window.addEventListener('click', function(event) {
-      const linkList = document.getElementById('link-list');
-      const menuBtn = document.getElementById('menu-btn');
-      if (event.target !== menuBtn && !menuBtn.contains(event.target) && event.target !== linkList && !linkList.contains(event.target)) {
-        linkList.style.display = 'none';
+    // Function to handle button clicks
+    function handleButtonClick(buttonId) {
+      switch (buttonId) {
+        case 'fullscreen-btn':
+          toggleFullscreen();
+          alert('Fullscreen button clicked');
+          break;
+        case 'menu-btn':
+          const linkList = document.getElementById('link-list');
+          linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
+          alert('Menu button clicked');
+          break;
+        case 'refresh-btn':
+          location.reload(); // Refresh the page
+          alert('Page is refreshing...');
+          break;
+        case 'play-btn':
+          //alert('Play button clicked');
+		  alert('Width: '+window.innerWidth+'/ Height: '+window.innerHeight)
+          // Add play functionality here
+          break;
+        case 'stop-btn':
+          alert('Stop button clicked');
+          // Add stop functionality here
+          break;
+        case 'prev-btn':
+          alert('Previous button clicked');
+          // Add previous functionality here
+          break;
+        case 'next-btn':
+          alert('Next button clicked');
+          // Add next functionality here
+          break;
+        case 'zoom-in-btn':
+          alert('Zoom In button clicked');
+          // Add zoom in functionality here
+          break;
+        case 'zoom-out-btn':
+          alert('Zoom Out button clicked');
+          // Add zoom out functionality here
+          break;
+        default:
+          alert('Unknown button clicked');
       }
-    });
+    }
+
+    // Attach click event listeners to buttons
+    document.getElementById('fullscreen-btn').addEventListener('click', () => handleButtonClick('fullscreen-btn'));
+    document.getElementById('menu-btn').addEventListener('click', () => handleButtonClick('menu-btn'));
+    document.getElementById('refresh-btn').addEventListener('click', () => handleButtonClick('refresh-btn'));
+    document.getElementById('play-btn').addEventListener('click', () => handleButtonClick('play-btn'));
+    document.getElementById('stop-btn').addEventListener('click', () => handleButtonClick('stop-btn'));
+    document.getElementById('prev-btn').addEventListener('click', () => handleButtonClick('prev-btn'));
+    document.getElementById('next-btn').addEventListener('click', () => handleButtonClick('next-btn'));
+    document.getElementById('zoom-in-btn').addEventListener('click', () => handleButtonClick('zoom-in-btn'));
+    document.getElementById('zoom-out-btn').addEventListener('click', () => handleButtonClick('zoom-out-btn'));
 
     // Initialize grid on page load
     window.addEventListener('load', createGrid);
-
-    // Recalculate grid on window resize
-    window.addEventListener('resize', createGrid);
   </script>
 </body>
 </html>
