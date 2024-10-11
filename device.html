@@ -14,10 +14,12 @@
 </head>
 <body>
     <h1 id="device-message"></h1>
+    <h1 id="device-message2"></h1>
+    <h1 id="device-message3"></h1>
     <p id="agent-info"></p>
     <p id="agent-info2"></p>
+    <p id="agent-info3"></p>
     <p id="screen-info"></p>
-    <h1 id="device-message2"></h1>
 
     <script>
         function isMobileDevice() {
@@ -32,7 +34,11 @@
 	    const userAgent = navigator.userAgent.toLowerCase();
 	    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/.test(userAgent);
 	}
-		    
+	    
+	function isMobile2() {
+	    return /Mobi|Android/i.test(navigator.userAgent);
+	}
+	    
         function getScreenInfo() {
             const width = window.innerWidth;
             const height = window.innerHeight;
@@ -44,14 +50,18 @@
         // Update the HTML based on the device type and screen info
         const deviceMessage = document.getElementById("device-message");
         const deviceMessage2 = document.getElementById("device-message2");
+        const deviceMessage3 = document.getElementById("device-message3");
         const agentInfo = document.getElementById("agent-info");
         const agentInfo2 = document.getElementById("agent-info2");
+        const agentInfo3 = document.getElementById("agent-info3");
         const screenInfo = document.getElementById("screen-info");
 
-        deviceMessage.textContent = isMobileDevice() ? "You are using a mobile device." : "You are using a desktop.";
-        deviceMessage2.textContent = isMobile() ? "This is a mobile device, even if using desktop site." : "This is a desktop device.";
+        deviceMessage.textContent = isMobileDevice() ? "0. Mobile" : "0. Desktop";
+        deviceMessage2.textContent = isMobile() ? "1. Mobile" : "1. Desktop";
+        deviceMessage3.textContent = isMobile2() ? "2. Mobile" : "2. Desktop";
         agentInfo.textContent = navigator.userAgent || navigator.vendor || window.opera;
         agentInfo2.textContent = navigator.userAgentData;
+        agentInfo3.textContent = navigator.userAgent;
         screenInfo.innerHTML = getScreenInfo();
 		
 		window.addEventListener('resize', function() {
