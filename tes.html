@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CCTV</title>
   <style>
     * {
       margin: 0;
@@ -166,27 +167,145 @@
 
     <div id="menu">
       <button id="fullscreen-btn">⛶</button> <!-- Fullscreen icon -->
-      <button id="menu-btn">📜</button> <!-- Menu icon -->
+      <button id="menu-btn">☰</button> <!-- Menu icon  style="display: none"-->
       <button id="refresh-btn">🔄</button> <!-- Refresh icon -->
       <button id="play-btn">▶️</button> <!-- Play icon -->
-      <button id="stop-btn">⏹️</button> <!-- Stop icon -->
+      <button id="stop-btn" style="display: none">⏹️</button> <!-- Stop icon -->
       <button id="prev-btn">⏪</button> <!-- Prev icon -->
       <button id="next-btn">⏩</button> <!-- Next icon -->
-      <button id="zoom-in-btn">🔍</button> <!-- Zoom In icon -->
-      <button id="zoom-out-btn">🔍-</button> <!-- Zoom Out icon -->
+      <button id="zoom-btn">🪟</button> <!-- Zoom In icon -->
+      <!-- <button id="zoom-in-btn">🪟🔍</button> -->
+      <!-- <button id="zoom-out-btn">🔎</button> -->
     </div>
   </div>
 
   <script>
-    function createGrid() {
+	var jsonUrl = 'data.json';
+	var imgIndex = 0;
+	var totalCells = 0;
+	const groupId = getQueryParam('id');
+	function getQueryParam(param) {
+		const urlParams = new URLSearchParams(window.location.search);
+		return urlParams.get(param);
+	}
+	/*
+    function addImagesToGrid(totalCells) {
       const gridContainer = document.getElementById('grid-container');
       const linkList = document.getElementById('link-list');
 
-      // Temporarily remove the link list from the DOM before clearing the grid
       if (linkList.parentNode) {
         gridContainer.removeChild(linkList);
       }
 
+      // Remove any previous images (if any)
+      gridContainer.innerHTML = '';
+      for (let i = 0; i < totalCells; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.classList.add('grid-item');
+
+        const img = document.createElement('img');
+        img.src = 'https://via.placeholder.com/1600x900';
+        img.alt = 'Grid Image';
+
+        // Add click event for fullscreen image
+        img.addEventListener('click', () => {
+          const linkList = document.getElementById('link-list');
+
+          // Hide the link list if it is currently visible
+          if (linkList.style.display === 'block') {
+            linkList.style.display = 'none';
+          } else {
+            // Create fullscreen overlay
+            const fullImg = document.createElement('img');
+            fullImg.src = img.src;
+            fullImg.style.width = '100vw';
+            fullImg.style.height = '100vh';
+            fullImg.style.objectFit = 'contain';
+
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.zIndex = '1000';
+            overlay.onclick = () => document.body.removeChild(overlay);
+
+            overlay.appendChild(fullImg);
+            document.body.appendChild(overlay);
+          }
+        });
+
+        gridItem.appendChild(img);
+        gridContainer.appendChild(gridItem);
+      }
+
+      gridContainer.appendChild(linkList);
+    }
+	*/
+	async function createGridItem() {
+		try {
+			const gridContainer = document.getElementById('grid-container');
+			gridContainer.innerHTML = '';
+			const response = await fetch(jsonUrl);
+			if (!response.ok) {
+			  throw new Error('Network response was not ok');
+			}
+			const data = await response.json(); // Convert the response to JSON
+			data.slice(imgIndex, imgIndex+totalCells).forEach(item => { 
+				const gridItem = document.createElement('div');
+				gridItem.classList.add('grid-item');
+				var srcurl = item.url+'/cover';
+				srcurl = srcurl.replace('/media/','/api/');
+				console.log(srcurl);
+				const img = document.createElement('img');
+				img.src = srcurl; // Example placeholder image
+				img.alt = item.title; // Add alt text for accessibility
+
+				// Add click event to show the image in fullscreen
+				img.addEventListener('click', () => {
+						  // Hide the link list if it is currently visible
+				  const linkList = document.getElementById('link-list');
+				  if (linkList.style.display === 'block') {
+					linkList.style.display = 'none';
+				  } else {
+					// Create fullscreen overlay if the link list is not visible
+					  const fullImg = document.createElement('img');
+					  fullImg.src = img.src;
+					  fullImg.style.width = '100vw';
+					  fullImg.style.height = '100vh';
+					  fullImg.style.objectFit = 'contain'; // Maintain aspect ratio
+
+					  const overlay = document.createElement('div');
+					  overlay.style.position = 'fixed';
+					  overlay.style.top = '0';
+					  overlay.style.left = '0';
+					  overlay.style.width = '100%';
+					  overlay.style.height = '100%';
+					  overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+					  overlay.style.display = 'flex';
+					  overlay.style.justifyContent = 'center';
+					  overlay.style.alignItems = 'center';
+					  overlay.style.zIndex = '1000';
+					  overlay.onclick = () => document.body.removeChild(overlay); // Remove overlay on click
+
+					  overlay.appendChild(fullImg);
+					  document.body.appendChild(overlay);
+				  }
+				});
+				gridItem.appendChild(img);
+				gridContainer.appendChild(gridItem);
+			});
+		} catch (error) {
+			console.error('There has been a problem with your fetch operation:', error);
+		}
+	} 
+    function createGrid() {
+      const gridContainer = document.getElementById('grid-container');
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
       let columns, rows;
@@ -196,86 +315,96 @@
       // Determine columns and rows based on screen dimensions
       if (screenHeight < splitHeight && screenWidth < screenHeight) {
         // Portrait with width < 1000
-		console.log('a');
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
+		const w = screenWidth/columns;
+		const h = screenHeight/rows;
+		const r = w/h;
+		console.log('a -> w: '+w+' / h: '+h+' / r: '+r);
       } else if (screenHeight >= splitHeight && screenWidth < screenHeight) {
         // Portrait with width >= 1000
-		console.log('b');
-        columns = 2;
+		if (screenWidth < splitWidth ) { columns = 1; }
+		else { columns = 2; }
+//        rows = Math.ceil(screenHeight / ((screenWidth) / 16 * 9));
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+		const w = screenWidth/columns;
+		const h = screenHeight/rows;
+		const r = w/h;
+		console.log('b -> w: '+w+' / h: '+h+' / r: '+r);
       } else if (screenWidth < splitWidth && screenWidth > screenHeight) {
         // Landscape with width < 1000
-		console.log('c');
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
+		const w = screenWidth/columns;
+		const h = screenHeight/rows;
+		const r = w/h;
+		console.log('c -> w: '+w+' / h: '+h+' / r: '+r);
       } else if (screenWidth >= splitWidth && screenWidth > screenHeight) {
         // Landscape with width >= 1000
-		console.log('d');
         columns = 2;
+		//console.log('r='+screenHeight / ((screenWidth / 2) / 16 * 9));
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+//        rows = Math.ceil(screenHeight / ((screenWidth) / 16 * 9));
+		const w = screenWidth/columns;
+		const h = screenHeight/rows;
+		const r = w/h;
+		console.log('d -> w: '+w+' / h: '+h+' / r: '+r);
       } else if (screenWidth < splitWidth) {
         // Near-square screen (3 rows, 2 columns)
-		console.log('e');
         columns = 1;
         rows = 2;
+		const w = screenWidth/columns;
+		const h = screenHeight/rows;
+		const r = w/h;
+		console.log('e -> w: '+w+' / h: '+h+' / r: '+r);
       } else {
         // Near-square screen (3 rows, 2 columns)
-		console.log('a');
+        columns = 2;
+        rows = 3;
+		const w = screenWidth/columns;
+		const h = screenHeight/rows;
+		const r = w/h;
+		console.log('f -> w: '+w+' / h: '+h+' / r: '+r);
+      }
+      // Update grid template based on calculated rows and columns
+      gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+      gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+      // Add grid items with images
+      totalCells = columns * rows;
+	  createGridItem();
+	//	addImagesToGrid(totalCells);
+      // Re-append the link list back into the grid-container
+      //gridContainer.appendChild(linkList);
+    } /*
+	function createGrid1() {
+      const gridContainer = document.getElementById('grid-container');
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      let columns, rows;
+
+      // Calculate columns and rows based on screen size
+      if (screenWidth < 1000 && screenWidth < screenHeight) {
+        columns = 1;
+        rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
+      } else if (screenWidth >= 1000 && screenWidth < screenHeight) {
+        columns = 2;
+        rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+      } else if (screenWidth < 1000 && screenWidth > screenHeight) {
+        columns = 1;
+        rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
+      } else if (screenWidth >= 1000 && screenWidth > screenHeight) {
+        columns = 2;
+        rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+      } else {
         columns = 2;
         rows = 3;
       }
 
-      // Update grid template based on calculated rows and columns
+      // Apply grid template based on the calculated rows and columns
       gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
       gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-
-      // Clear current grid items
-      gridContainer.innerHTML = '';
-
-      // Add grid items with images
-      const totalCells = columns * rows;
-      for (let i = 0; i < totalCells; i++) {
-        const gridItem = document.createElement('div');
-        gridItem.classList.add('grid-item');
-
-        const img = document.createElement('img');
-        img.src = 'https://via.placeholder.com/1600x900'; // Example placeholder image
-        img.alt = 'Grid Image'; // Add alt text for accessibility
-
-        // Add click event to show the image in fullscreen
-        img.addEventListener('click', () => {
-          const fullImg = document.createElement('img');
-          fullImg.src = img.src;
-          fullImg.style.width = '100vw';
-          fullImg.style.height = '100vh';
-          fullImg.style.objectFit = 'contain'; // Maintain aspect ratio
-
-          const overlay = document.createElement('div');
-          overlay.style.position = 'fixed';
-          overlay.style.top = '0';
-          overlay.style.left = '0';
-          overlay.style.width = '100%';
-          overlay.style.height = '100%';
-          overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-          overlay.style.display = 'flex';
-          overlay.style.justifyContent = 'center';
-          overlay.style.alignItems = 'center';
-          overlay.style.zIndex = '1000';
-          overlay.onclick = () => document.body.removeChild(overlay); // Remove overlay on click
-
-          overlay.appendChild(fullImg);
-          document.body.appendChild(overlay);
-        });
-
-        gridItem.appendChild(img);
-        gridContainer.appendChild(gridItem);
-      }
-
-      // Re-append the link list back into the grid-container
-      gridContainer.appendChild(linkList);
-    }
-
+	  addImagesToGrid(columns * rows);
+    } */
     // Function to toggle fullscreen mode
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
@@ -319,8 +448,10 @@
           // Add previous functionality here
           break;
         case 'next-btn':
-          alert('Next button clicked');
+          //alert('Next button clicked');
           // Add next functionality here
+		  imgIndex = imgIndex + totalCells;
+		  createGridItem();
           break;
         case 'zoom-in-btn':
           alert('Zoom In button clicked');
@@ -343,11 +474,12 @@
     document.getElementById('stop-btn').addEventListener('click', () => handleButtonClick('stop-btn'));
     document.getElementById('prev-btn').addEventListener('click', () => handleButtonClick('prev-btn'));
     document.getElementById('next-btn').addEventListener('click', () => handleButtonClick('next-btn'));
-    document.getElementById('zoom-in-btn').addEventListener('click', () => handleButtonClick('zoom-in-btn'));
-    document.getElementById('zoom-out-btn').addEventListener('click', () => handleButtonClick('zoom-out-btn'));
+    <!-- document.getElementById('zoom-in-btn').addEventListener('click', () => handleButtonClick('zoom-in-btn')); -->
+    <!-- document.getElementById('zoom-out-btn').addEventListener('click', () => handleButtonClick('zoom-out-btn')); -->
 
     // Initialize grid on page load
     window.addEventListener('load', createGrid);
+    window.addEventListener('resize', createGrid);
   </script>
 </body>
 </html>
