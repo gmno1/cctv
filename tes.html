@@ -4,148 +4,148 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
+    body {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-#main-content {
-  display: flex;
-  flex-grow: 1;
-  overflow: hidden;
-  position: relative;
-}
+    #main-content {
+      display: flex;
+      flex-grow: 1;
+      overflow: hidden;
+      position: relative;
+    }
 
-#grid-container {
-  flex-grow: 1;
-  display: grid;
-  gap: 1px;
-  border: 1px solid black;
-  background-color: black;
-  position: relative; /* Makes the grid-container the positioning context */
-}
+    #grid-container {
+      flex-grow: 1;
+      display: grid;
+      gap: 1px;
+      border: 1px solid black;
+      background-color: black;
+      position: relative; /* Makes the grid-container the positioning context */
+    }
 
-.grid-item {
-  position: relative;
-  border: 1px solid black;
-}
+    .grid-item {
+      position: relative;
+      border: 1px solid black;
+    }
 
-.grid-item img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: fill; /* Stretch image without maintaining aspect ratio */
-}
+    .grid-item img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: fill; /* Stretch image without maintaining aspect ratio */
+    }
 
-#menu {
-  display: flex;
-  background-color: #333;
-  color: white;
-  gap: 5px;
-  padding: 10px;
-}
+    #menu {
+      display: flex;
+      background-color: #333;
+      color: white;
+      gap: 5px;
+      padding: 10px;
+    }
 
-#menu button {
-  background-color: #555;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
+    #menu button {
+      background-color: #555;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 20px; /* Increase font size for icons */
+    }
 
-#menu button:hover {
-  background-color: #777;
-}
+    #menu button:hover {
+      background-color: #777;
+    }
 
-/* Centered link list overlay within the grid */
-#link-list {
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  color: black;
-  padding: 20px;
-  border: 1px solid #ccc;
-  z-index: 100;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-}
+    /* Centered link list overlay within the grid */
+    #link-list {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border: 1px solid #ccc;
+      z-index: 100;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    }
 
-#link-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+    #link-list ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-#link-list ul li {
-  margin: 10px 0;
-}
+    #link-list ul li {
+      margin: 10px 0;
+    }
 
-#link-list ul li a {
-  text-decoration: none;
-  color: #333;
-  font-size: 16px;
-}
+    #link-list ul li a {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+    }
 
-/* Portrait: menu at the bottom and buttons stretch */
-@media (orientation: portrait) {
-  body {
-    flex-direction: column;
-  }
+    /* Portrait: menu at the bottom and buttons stretch */
+    @media (orientation: portrait) {
+      body {
+        flex-direction: column;
+      }
 
-  #menu {
-    flex-direction: row;
-    width: 100%;
-    justify-content: space-between;
-    align-items: stretch; /* Stretch buttons in portrait mode */
-  }
+      #menu {
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        align-items: stretch; /* Stretch buttons in portrait mode */
+      }
 
-  #menu button {
-    flex-grow: 1; /* Buttons stretch to fill available space */
-  }
+      #menu button {
+        flex-grow: 1; /* Buttons stretch to fill available space */
+      }
 
-  #main-content {
-    flex-direction: column;
-  }
-}
+      #main-content {
+        flex-direction: column;
+      }
+    }
 
-/* Landscape: menu on the right and buttons stretch */
-@media (orientation: landscape) {
-  body {
-    flex-direction: row;
-  }
+    /* Landscape: menu on the right and buttons stretch */
+    @media (orientation: landscape) {
+      body {
+        flex-direction: row;
+      }
 
-  #menu {
-    flex-direction: column;
-    width: auto;
-    height: 100%;
-    justify-content: flex-start;
-    align-items: stretch; /* Stretch buttons in landscape mode */
-  }
+      #menu {
+        flex-direction: column;
+        width: auto;
+        height: 100%;
+        justify-content: flex-start;
+        align-items: stretch; /* Stretch buttons in landscape mode */
+      }
 
-  #menu button {
-    flex-grow: 1; /* Buttons stretch to fill available space */
-  }
+      #menu button {
+        flex-grow: 1; /* Buttons stretch to fill available space */
+      }
 
-  #main-content {
-    flex-direction: row;
-  }
+      #main-content {
+        flex-direction: row;
+      }
 
-  #grid-container {
-    width: calc(100% - 100px); /* Adjust grid width to leave space for menu */
-  }
-}
-
+      #grid-container {
+        width: calc(100% - 100px); /* Adjust grid width to leave space for menu */
+      }
+    }
   </style>
 </head>
 <body>
@@ -162,130 +162,115 @@ body {
     </div>
 
     <div id="menu">
-      <button id="menu-btn">Menu</button>
-      <button id="refresh-btn" onclick="toggleFullscreen();">Refresh</button>
-      <button id="play-btn">Play</button>
-      <button id="stop-btn">Stop</button>
-      <button id="prev-btn">Prev</button>
-      <button id="next-btn">Next</button>
-      <button id="zoom-in-btn">Zoom In</button>
-      <button id="zoom-out-btn">Zoom Out</button>
+      <button id="fullscreen-btn">⛶</button> <!-- Fullscreen icon -->
+      <button id="menu-btn">📜</button> <!-- Menu icon -->
+      <button id="refresh-btn">🔄</button> <!-- Refresh icon -->
+      <button id="play-btn">▶️</button> <!-- Play icon -->
+      <button id="stop-btn">⏹️</button> <!-- Stop icon -->
+      <button id="prev-btn">⏪</button> <!-- Prev icon -->
+      <button id="next-btn">⏩</button> <!-- Next icon -->
+      <button id="zoom-in-btn">🔍</button> <!-- Zoom In icon -->
+      <button id="zoom-out-btn">🔍-</button> <!-- Zoom Out icon -->
     </div>
   </div>
 
   <script>
-  function openFullscreen(elem) {
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.mozRequestFullScreen) { // Firefox
-    elem.mozRequestFullScreen();
-  } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { // IE/Edge
-    elem.msRequestFullscreen();
-  }
-}
-function closeFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.mozCancelFullScreen) { // Firefox
-    document.mozCancelFullScreen();
-  } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) { // IE/Edge
-    document.msExitFullscreen();
-  }
-}
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    // Enter fullscreen
-    openFullscreen(document.documentElement);
-  } else {
-    // Exit fullscreen
-    closeFullscreen();
-  }
-}
     function createGrid() {
-  const gridContainer = document.getElementById('grid-container');
-  const linkList = document.getElementById('link-list');
-  
-  // Temporarily remove the link list from the DOM before clearing the grid
-  if (linkList.parentNode) {
-    gridContainer.removeChild(linkList);
-  }
+      const gridContainer = document.getElementById('grid-container');
+      const linkList = document.getElementById('link-list');
+      
+      // Temporarily remove the link list from the DOM before clearing the grid
+      if (linkList.parentNode) {
+        gridContainer.removeChild(linkList);
+      }
 
-  const screenWidth = window.innerWidth;
-  const screenHeight = window.innerHeight;
-  let columns, rows;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      let columns, rows;
 
-  // Determine columns and rows based on screen dimensions
-  if (screenWidth < 1000 && screenWidth < screenHeight) {
-    // Portrait with width < 1000
-    columns = 1;
-    rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-  } else if (screenWidth >= 1000 && screenWidth < screenHeight) {
-    // Portrait with width >= 1000
-    columns = 2;
-    rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
-  } else if (screenWidth < 1000 && screenWidth > screenHeight) {
-    // Landscape with width < 1000
-    columns = 1;
-    rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-  } else if (screenWidth >= 1000 && screenWidth > screenHeight) {
-    // Landscape with width >= 1000
-    columns = 2;
-    rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
-  } else {
-    // Near-square screen (3 rows, 2 columns)
-    columns = 2;
-    rows = 3;
-  }
+      // Determine columns and rows based on screen dimensions
+      if (screenWidth < 1000 && screenWidth < screenHeight) {
+        // Portrait with width < 1000
+        columns = 1;
+        rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
+      } else if (screenWidth >= 1000 && screenWidth < screenHeight) {
+        // Portrait with width >= 1000
+        columns = 2;
+        rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+      } else if (screenWidth < 1000 && screenWidth > screenHeight) {
+        // Landscape with width < 1000
+        columns = 1;
+        rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
+      } else if (screenWidth >= 1000 && screenWidth > screenHeight) {
+        // Landscape with width >= 1000
+        columns = 2;
+        rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+      } else {
+        // Near-square screen (3 rows, 2 columns)
+        columns = 2;
+        rows = 3;
+      }
 
-  // Update grid template based on calculated rows and columns
-  gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
-  gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+      // Update grid template based on calculated rows and columns
+      gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+      gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
 
-  // Clear current grid items
-  gridContainer.innerHTML = '';
+      // Clear current grid items
+      gridContainer.innerHTML = '';
 
-  // Add grid items with images
-  const totalCells = columns * rows;
-  for (let i = 0; i < totalCells; i++) {
-    const gridItem = document.createElement('div');
-    gridItem.classList.add('grid-item');
+      // Add grid items with images
+      const totalCells = columns * rows;
+      for (let i = 0; i < totalCells; i++) {
+        const gridItem = document.createElement('div');
+        gridItem.classList.add('grid-item');
 
-    const img = document.createElement('img');
-    img.src = 'https://via.placeholder.com/1600x900';  // Example placeholder image
-    gridItem.appendChild(img);
+        const img = document.createElement('img');
+        img.src = 'https://via.placeholder.com/1600x900'; // Example placeholder image
+        gridItem.appendChild(img);
 
-    gridContainer.appendChild(gridItem);
-  }
+        gridContainer.appendChild(gridItem);
+      }
 
-  // Re-append the link list back into the grid-container
-  gridContainer.appendChild(linkList);
-}
+      // Re-append the link list back into the grid-container
+      gridContainer.appendChild(linkList);
+    }
 
-// Menu button click event to toggle the link list overlay
-document.getElementById('menu-btn').addEventListener('click', function() {
-  const linkList = document.getElementById('link-list');
-  linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
-});
+    // Function to toggle fullscreen mode
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+        });
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
 
-// Close the overlay if clicked outside
-window.addEventListener('click', function(event) {
-  const linkList = document.getElementById('link-list');
-  const menuBtn = document.getElementById('menu-btn');
-  if (event.target !== menuBtn && !menuBtn.contains(event.target) && event.target !== linkList && !linkList.contains(event.target)) {
-    linkList.style.display = 'none';
-  }
-});
+    // Event listener for the fullscreen button
+    document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
 
-// Initialize grid on page load
-window.addEventListener('load', createGrid);
+    // Menu button click event to toggle the link list overlay
+    document.getElementById('menu-btn').addEventListener('click', function() {
+      const linkList = document.getElementById('link-list');
+      linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
+    });
 
-// Recalculate grid on window resize
-window.addEventListener('resize', createGrid);
+    // Close the overlay if clicked outside
+    window.addEventListener('click', function(event) {
+      const linkList = document.getElementById('link-list');
+      const menuBtn = document.getElementById('menu-btn');
+      if (event.target !== menuBtn && !menuBtn.contains(event.target) && event.target !== linkList && !linkList.contains(event.target)) {
+        linkList.style.display = 'none';
+      }
+    });
 
+    // Initialize grid on page load
+    window.addEventListener('load', createGrid);
+
+    // Recalculate grid on window resize
+    window.addEventListener('resize', createGrid);
   </script>
 </body>
 </html>
