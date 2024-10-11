@@ -188,23 +188,29 @@
       const screenHeight = window.innerHeight;
       let columns, rows;
 
+      const splitHeight = 800;
+      const splitWidth = 600;
       // Determine columns and rows based on screen dimensions
-      if (screenWidth < 1000 && screenWidth < screenHeight) {
+      if (screenHeight < splitHeight && screenWidth < screenHeight) {
         // Portrait with width < 1000
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-      } else if (screenWidth >= 1000 && screenWidth < screenHeight) {
+      } else if (screenHeight >= splitHeight && screenWidth < screenHeight) {
         // Portrait with width >= 1000
         columns = 2;
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
-      } else if (screenWidth < 1000 && screenWidth > screenHeight) {
+      } else if (screenWidth < splitWidth && screenWidth > screenHeight) {
         // Landscape with width < 1000
         columns = 1;
         rows = Math.ceil(screenHeight / (screenWidth / 16 * 9));
-      } else if (screenWidth >= 1000 && screenWidth > screenHeight) {
+      } else if (screenWidth >= splitWidth && screenWidth > screenHeight) {
         // Landscape with width >= 1000
         columns = 2;
         rows = Math.ceil(screenHeight / ((screenWidth / 2) / 16 * 9));
+      } else if (screenWidth < splitWidth) {
+        // Near-square screen (3 rows, 2 columns)
+        columns = 1;
+        rows = 2;
       } else {
         // Near-square screen (3 rows, 2 columns)
         columns = 2;
