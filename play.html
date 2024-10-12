@@ -51,7 +51,24 @@
         cursor: pointer;
         /* Change cursor to indicate clickable */
       }
-
+	  
+		.grid-item-title {
+		  position: absolute; /* Position title on top of image */
+		  top: 10px; /* Position from the top */
+		  left: 10px; /* Position from the left */
+		  background-color: rgba(0, 0, 0, 0.1); /* Semi-transparent background */
+		  color: white;
+		  padding: 5px 10px; /* Padding for title */
+		  border-radius: 5px; /* Rounded corners for title */
+		  font-size: 16px; /* Font size for title */
+		}
+	
+        .grid-item iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+		
       #menu {
         display: flex;
         background-color: #333;
@@ -319,7 +336,7 @@
         }
       }
       async function createGridItem() {
-        console.log('recreate grid item');
+        console.log('recreate grid item='+imgIndex);
         try {
           const gridContainer = document.getElementById('grid-container');
           const linkList = document.getElementById('link-list');
@@ -330,54 +347,78 @@
           dataJson.slice(imgIndex, imgIndex + totalCells).forEach(item => {
             const gridItem = document.createElement('div');
             gridItem.classList.add('grid-item');
-            var newTimestamp = new Date().getTime();
-            var srcurl = item.url + '/cover?t=' + newTimestamp;
-            srcurl = srcurl.replace('/media/', '/api/');
-            const img = document.createElement('img');
-            img.src = srcurl;
-            //img.src = 'https://via.placeholder.com/1600x900'; 
-            img.alt = item.title;
-            img.onerror = () => {
-              const fallbackText = document.createElement('div');
-              fallbackText.style.color = 'white';
-              fallbackText.style.backgroundColor = 'black';
-              fallbackText.style.textAlign = 'center';
-              fallbackText.style.height = '100%';
-              fallbackText.style.display = 'flex';
-              fallbackText.style.justifyContent = 'center';
-              fallbackText.style.alignItems = 'center';
-              fallbackText.innerHTML = img.alt + '<br> not available '; 
-              gridItem.innerHTML = '';
-              gridItem.appendChild(fallbackText);
-            };
-            img.addEventListener('click', () => {
-              const linkList = document.getElementById('link-list');
-              if (linkList.style.display === 'block') {
-                linkList.style.display = 'none';
-              } else {
-                // Create fullscreen overlay if the link list is not visible
-                const fullImg = document.createElement('img');
-                fullImg.src = img.src;
-                fullImg.style.width = '100vw';
-                fullImg.style.height = '100vh';
-                fullImg.style.objectFit = 'contain';
-                const overlay = document.createElement('div');
-                overlay.style.position = 'fixed';
-                overlay.style.top = '0';
-                overlay.style.left = '0';
-                overlay.style.width = '100%';
-                overlay.style.height = '100%';
-                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                overlay.style.display = 'flex';
-                overlay.style.justifyContent = 'center';
-                overlay.style.alignItems = 'center';
-                overlay.style.zIndex = '1000';
-                overlay.onclick = () => document.body.removeChild(overlay);
-                overlay.appendChild(fullImg);
-                document.body.appendChild(overlay);
-              }
-            });
-            gridItem.appendChild(img);
+			if(modeIndex==0) {
+				var newTimestamp = new Date().getTime();
+				var srcurl = item.url + '/cover?t=' + newTimestamp;
+				srcurl = srcurl.replace('/media/', '/api/');
+				const img = document.createElement('img');
+				img.src = srcurl;
+				//img.src = 'https://via.placeholder.com/1600x900'; 
+				img.alt = item.title;
+				img.onerror = () => {
+				  const fallbackText = document.createElement('div');
+				  fallbackText.style.color = 'white';
+				  fallbackText.style.backgroundColor = 'black';
+				  fallbackText.style.textAlign = 'center';
+				  fallbackText.style.height = '100%';
+				  fallbackText.style.display = 'flex';
+				  fallbackText.style.justifyContent = 'center';
+				  fallbackText.style.alignItems = 'center';
+				  fallbackText.innerHTML = img.alt + '<br> not available '; 
+				  gridItem.innerHTML = '';
+				  gridItem.appendChild(fallbackText);
+				};
+				img.addEventListener('click', () => {
+				  const linkList = document.getElementById('link-list');
+				  if (linkList.style.display === 'block') {
+					linkList.style.display = 'none';
+				  } else {
+					// Create fullscreen overlay if the link list is not visible
+					const fullImg = document.createElement('img');
+					fullImg.src = img.src;
+					fullImg.style.width = '100vw';
+					fullImg.style.height = '100vh';
+					fullImg.style.objectFit = 'contain';
+					const overlay = document.createElement('div');
+					overlay.style.position = 'fixed';
+					overlay.style.top = '0';
+					overlay.style.left = '0';
+					overlay.style.width = '100%';
+					overlay.style.height = '100%';
+					overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+					overlay.style.display = 'flex';
+					overlay.style.justifyContent = 'center';
+					overlay.style.alignItems = 'center';
+					overlay.style.zIndex = '1000';
+					overlay.onclick = () => document.body.removeChild(overlay);
+					overlay.appendChild(fullImg);
+					document.body.appendChild(overlay);
+				  }
+				});
+				gridItem.appendChild(img);
+			} else if (modeIndex==1) {
+				const vidFrame = document.createElement('iframe');
+				const fileNameWithExtension = item.url.split('/').pop(); 
+				const fileName = fileNameWithExtension.split('.')[0];
+				//vidFrame.src = 'https://gmno1.github.io/cctv/v?id='+fileName;
+				vidFrame.src = 'v?id='+fileName;
+				vidFrame.allowFullscreen = true; // Adds the allowfullscreen attribute
+				//vidFrame.setAttribute('allowfullscreen', ''); // You can also use setAttribute if you prefer
+				gridItem.appendChild(vidFrame); 			
+			} else {
+				const vidFrame = document.createElement('iframe');
+				const fileNameWithExtension = item.url.split('/').pop(); 
+				const fileName = fileNameWithExtension.split('.')[0];
+				console.log(item.url);
+				vidFrame.src = item.url.replace('/media/', '/api/');
+				vidFrame.allowFullscreen = true; // Adds the allowfullscreen attribute
+				//vidFrame.setAttribute('allowfullscreen', ''); // You can also use setAttribute if you prefer
+				gridItem.appendChild(vidFrame); 			
+			}		
+			const title = document.createElement('div');
+			title.classList.add('grid-item-title');
+			title.textContent = item.title; // Set title text
+			gridItem.appendChild(title); 
             gridContainer.appendChild(gridItem);
           });
           gridContainer.appendChild(linkList);
@@ -455,18 +496,49 @@
       }
 	
 	  function nextContent() {
+	    if (dataCount<0) {	return;	}
 		if ((imgIndex + totalCells) < dataCount) {
-		  imgIndex = imgIndex + totalCells;
+		  var newIndex = imgIndex + totalCells;
+		  if(newIndex!==imgIndex) {
+			imgIndex = newIndex;
+			createGridItem();	  
+		  }
 		}
-		createGridItem();	  
 	  }
 	  
 	  function prevContent() {
+	    if (dataCount<0) {	return;	}
 		imgIndex = imgIndex - totalCells;
 		if (imgIndex < 0) {
-		  imgIndex = 0;
+		  if(imgIndex!==0) {
+		    imgIndex = 0;
+			createGridItem();	  
+		  }
 		}
-		createGridItem();	  
+	  }
+
+	  function pageContent(pageIndex) {
+		console.log("pageContent = "+pageIndex);
+	    if (dataCount<0) {	return;	}
+		var newIndex;
+		if ((pageIndex*totalCells) < dataCount) {
+		  newIndex = pageIndex*totalCells;
+		} else {
+		  newIndex = dataCount - totalCells;
+		}
+		if(newIndex!==imgIndex) {
+			imgIndex = newIndex;
+			createGridItem();	  
+		} 
+	  }
+
+	  function lastContent(pageIndex) {
+	    if (dataCount<0) {	return;	}
+		var newIndex = dataCount - totalCells;
+		if(newIndex!==imgIndex) {
+			imgIndex = newIndex;
+			createGridItem();	  
+		} 
 	  }
 	  
       function handleButtonClick(buttonId) {
@@ -486,10 +558,14 @@
           case 'play-btn':
             playbtn.style.display = 'none';
             stopbtn.style.display = 'block';
+			modeIndex = 1;
+			createGridItem();
             break;
           case 'stop-btn':
             playbtn.style.display = 'block';
             stopbtn.style.display = 'none';
+			modeIndex = 0;
+			createGridItem();
             break;
           case 'prev-btn':
 		    prevContent()
@@ -498,22 +574,7 @@
 		    nextContent()
             break;
           case 'zoom-btn':
-            //alert('Zoom In button clicked');
-            const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
-            var minWidth;
-            if (screenWidth > screenHeight) {
-              minWidth = screenHeight;
-            } else {
-              minWidth = screenWidth;
-            }
-            maxZoom = Math.floor(minWidth / 270);
-            if (maxZoom < 2) {
-              maxZoom = 2;
-            }
-            newzoomIndex = (zoomIndex + 1) % maxZoom;
-			console.log('zoom='+zoomIndex+' / to='+newzoomIndex)
-			createGrid(newzoomIndex); 
+		    zoomNext();
             break;
           case 'zoom-in-btn':
             alert('Zoom In button clicked');
@@ -539,6 +600,24 @@
 		}
 	  }
 	  
+	  function showInfo() {
+		const screenWidth = window.innerWidth;
+		const screenHeight = window.innerHeight;
+		const cellWidth = screenWidth/totalColumns;
+		const cellHeight = screenHeight/totalRows;
+		alert('screenWidth='+screenWidth
+			+'\nscreenHeight='+screenHeight
+			+'\nscreenRatio='+(screenHeight/screenWidth)
+			+'\n\ntotalColumns='+totalColumns
+			+'\ntotalRows='+totalRows
+			+'\ntotalCells='+totalCells
+			+'\n\nCellWidth='+cellWidth
+			+'\nCellHeight='+cellHeight						
+			+'\nCellRatio='+(cellHeight/cellWidth)						
+			+'\n\nPicRatio='+(720/1280)
+		);	  
+	  }
+	  
       document.getElementById('fullscreen-btn').addEventListener('click', () => handleButtonClick('fullscreen-btn'));
       document.getElementById('menu-btn').addEventListener('click', () => handleButtonClick('menu-btn'));
       document.getElementById('refresh-btn').addEventListener('click', () => handleButtonClick('refresh-btn'));
@@ -554,6 +633,72 @@
       window.addEventListener('load', onLoad);
       window.addEventListener('resize', onResize);
 	  
+		document.addEventListener('keydown', function(event) {
+			const output = document.getElementById('output');
+
+			// Check which key was pressed
+			switch (event.key) {
+				case '+':
+					zoomBack();
+					break;
+				case '-':
+					zoomNext();
+					break;
+				case 'ArrowRight':
+					nextContent();
+					break;
+				case 'ArrowLeft':
+					prevContent();
+					break;
+				case ' ': // space -> refresh
+					createGridItem();
+					break;
+				case 'Enter':
+					toggleFullscreen();
+					break;					
+				case 'i':
+					showInfo();
+					break;					
+				case '`': // last data
+				case '/':
+				case '*':
+					lastContent(); 
+					break;
+				case '0':
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
+					pageContent(parseInt(event.key, 10));
+					console.log(`Number ${event.key} pressed!`);
+					break;
+			}
+		}); 
+		
+	  function zoomNext() {
+		//alert('Zoom In button clicked');
+		const screenWidth = window.innerWidth;
+		const screenHeight = window.innerHeight;
+		var minWidth;
+		if (screenWidth > screenHeight) {
+		  minWidth = screenHeight;
+		} else {
+		  minWidth = screenWidth;
+		}
+		maxZoom = Math.floor(minWidth / 270);
+		if (maxZoom < 2) {
+		  maxZoom = 2;
+		}
+		newzoomIndex = (zoomIndex + 1) % maxZoom;
+		console.log('zoom='+zoomIndex+' / to='+newzoomIndex)
+		createGrid(newzoomIndex); 
+	  }
+
 	  function zoomBack() {
 		//alert('Zoom In button clicked');
 		const screenWidth = window.innerWidth;
