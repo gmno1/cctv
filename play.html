@@ -262,10 +262,11 @@
     }
   </style>	
     <script>
-      var jsonUrl = 'diskominfo.json';
+      //var jsonUrl = 'diskominfo.json';
       var dataCount = -1;
       var dataJson;
       const groupId = getQueryParam('id') ?? 'diskominfo';
+      var jsonUrl = groupId + '.json';
       var isAskFullscreen = parseInt(getQueryParam('full') ?? 1, 10);
       var modeIndex = parseInt(getQueryParam('mode') ?? 0, 10);
       var imgIndex = parseInt(getQueryParam('from') ?? 0, 10);
@@ -400,8 +401,7 @@
 				const vidFrame = document.createElement('iframe');
 				const fileNameWithExtension = item.url.split('/').pop(); 
 				const fileName = fileNameWithExtension.split('.')[0];
-				//vidFrame.src = 'https://gmno1.github.io/cctv/v?id='+fileName;
-				vidFrame.src = 'v?id='+fileName;
+				vidFrame.src = 'https://gmno1.github.io/cctv/v?id='+fileName;
 				vidFrame.allowFullscreen = true; // Adds the allowfullscreen attribute
 				//vidFrame.setAttribute('allowfullscreen', ''); // You can also use setAttribute if you prefer
 				gridItem.appendChild(vidFrame); 			
