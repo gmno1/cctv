@@ -52,6 +52,18 @@
         /* Change cursor to indicate clickable */
       }
 	  
+      .grid-item video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        /* Stretch image without maintaining aspect ratio */
+        cursor: pointer;
+        /* Change cursor to indicate clickable */
+      }
+
 		.grid-item-title {
 		  position: absolute; /* Position title on top of image */
 		  top: 10px; /* Position from the top */
@@ -265,8 +277,14 @@
       //var jsonUrl = 'diskominfo.json';
       var dataCount = -1;
       var dataJson;
+      var plnJson = [];
       const groupId = getQueryParam('id') ?? 'diskominfo';
-      var jsonUrl = groupId + '.json';
+      const plnUrl = getQueryParam('pln'); // dishub.kaltimprov.go.id
+	  if(plnUrl) {
+		var jsonUrl = 'https://i-see.iconpln.co.id/backend/api/View/embedlink?url=' + plnUrl;
+	  } else {	  
+		var jsonUrl = groupId + '.json';
+	  }
       var isAskFullscreen = parseInt(getQueryParam('full') ?? 1, 10);
       var modeIndex = parseInt(getQueryParam('mode') ?? 0, 10);
       var imgIndex = parseInt(getQueryParam('from') ?? 0, 10);
@@ -330,32 +348,107 @@
             throw new Error('Network response was not ok');
           }
           dataJson = await response.json();
+		  if (dataJson.data && dataJson.data[0].areaTree && dataJson.data[0].areaTree[0].cameraTree) {
+				dataJson = dataJson.data[0].areaTree[0].cameraTree;
+		  }
           dataCount = dataJson.length;
           createGridItem();
         } catch (error) {
           console.error('There has been a problem with your fetch operation:', error);
         }
       }
-      async function createGridItem() {
-        console.log('recreate grid item='+imgIndex);
+
+      async function loadDataPln(url) {
+        console.log('load data');
+        try {
+		  urlPln = "https://i-see.iconpln.co.id/backend/api/View/embedlink?url="+url;
+		  const response = await fetch(urlPln);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          json = await response.json();
+		  if (json.data && json.data[0].areaTree && json.data[0].areaTree[0].cameraTree) {
+				json = json.data[0].areaTree[0].cameraTree;
+				plnJson[url] = json;
+		  }
+		  console.log(plnJson);
+        } catch (error) {
+          console.error('There has been a problem with your fetch operation:', error);
+        }
+      }
+	  
+      async function getDataPln(url) {
+		
+	  }
+	  
+	  async function setVideoUrl(vidContainer, vidUrl) {
+		const videoPageUrl = vidUrl.replace('/media/', '/api/');
+		fetch(videoPageUrl)
+			.then(response => {
+				if (!response.ok) {
+					document.getElementById('videoContainer').innerHTML = '<p>Network response was not ok</p>';
+					throw new Error('Network response was not ok');
+				}
+				return response.text();
+			})
+			.then(html => {
+				const parser = new DOMParser();
+				const doc = parser.parseFromString(html, 'text/html');
+				const videoElement = doc.querySelector('video');
+				if (videoElement) {
+					//const videoSrc = videoElement.getAttribute('src');
+					//document.getElementById('videoContainer').innerHTML = videoElement.outerHTML;
+					console.log(videoElement.getAttribute('src'));
+					vidContainer.src = videoElement.getAttribute('src');
+				} else {
+					console.error('There was a problem with the fetch operation:', 'No video element found');
+					return;
+				}
+			})
+			.catch(error => {
+				console.error('There was a problem with the fetch operation:', error);
+				return;
+			});
+	  }
+	  
+      async function createGridItem(offset = 0) {
+        //console.log('recreate grid item='+imgIndex+' / '+offset+' / '+(imgIndex + offset)+' / '+(imgIndex + totalCells));
         try {
           const gridContainer = document.getElementById('grid-container');
-          const linkList = document.getElementById('link-list');
-          if (linkList.parentNode) {
-            gridContainer.removeChild(linkList);
-          }
-          gridContainer.innerHTML = '';
-          dataJson.slice(imgIndex, imgIndex + totalCells).forEach(item => {
+		  const linkList = document.getElementById('link-list');
+		  if (linkList.parentNode) {
+			gridContainer.removeChild(linkList);
+		  }
+		  if(offset==0) {
+			 gridContainer.innerHTML = '';
+		  }
+		  //var i = 0;
+		  dataJson.slice(imgIndex + offset, imgIndex + totalCells).forEach(item => {
+		    //i = i + 1;
             const gridItem = document.createElement('div');
             gridItem.classList.add('grid-item');
+			var newTimestamp = new Date().getTime();
+			if(plnUrl) {
+				titleItem = item.cameraName;
+				var videosrc = item.streamingURL;
+				///console.log(videosrc);
+				var imagesrc = item.streamingURL + '&tx=' + newTimestamp;
+				imagesrc = imagesrc.replace('&format=fmp4&', '&format=jpeg&');
+			} else {
+				titleItem = item.title;
+				var imagesrc = item.url + '/cover?t=' + newTimestamp;
+				imagesrc = imagesrc.replace('/media/', '/api/');
+				//const fileNameWithExtension = item.url.split('/').pop(); 
+				//const fileName = fileNameWithExtension.split('.')[0];
+				//var videosrc = 'https://gmno1.github.io/cctv/v?id='+fileName;
+				videosrc = item.url;
+			}
+			//console.log(titleItem);
 			if(modeIndex==0) {
-				var newTimestamp = new Date().getTime();
-				var srcurl = item.url + '/cover?t=' + newTimestamp;
-				srcurl = srcurl.replace('/media/', '/api/');
 				const img = document.createElement('img');
-				img.src = srcurl;
+				img.src = imagesrc;
 				//img.src = 'https://via.placeholder.com/1600x900'; 
-				img.alt = item.title;
+				img.alt = titleItem;
 				img.onerror = () => {
 				  const fallbackText = document.createElement('div');
 				  fallbackText.style.color = 'white';
@@ -398,10 +491,18 @@
 				});
 				gridItem.appendChild(img);
 			} else if (modeIndex==1) {
+				const vidFrame = document.createElement('video');
+				if(plnUrl) {				
+					vidFrame.src = videosrc;
+				} else {
+					setVideoUrl(vidFrame, videosrc);
+				}
+				vidFrame.autoplay = true;
+				vidFrame.playsinline = true;
+				gridItem.appendChild(vidFrame); 			
+			} else if (modeIndex==11) {
 				const vidFrame = document.createElement('iframe');
-				const fileNameWithExtension = item.url.split('/').pop(); 
-				const fileName = fileNameWithExtension.split('.')[0];
-				vidFrame.src = 'https://gmno1.github.io/cctv/v?id='+fileName;
+				vidFrame.src = videosrc;
 				vidFrame.allowFullscreen = true; // Adds the allowfullscreen attribute
 				//vidFrame.setAttribute('allowfullscreen', ''); // You can also use setAttribute if you prefer
 				gridItem.appendChild(vidFrame); 			
@@ -409,7 +510,6 @@
 				const vidFrame = document.createElement('iframe');
 				const fileNameWithExtension = item.url.split('/').pop(); 
 				const fileName = fileNameWithExtension.split('.')[0];
-				console.log(item.url);
 				vidFrame.src = item.url.replace('/media/', '/api/');
 				vidFrame.allowFullscreen = true; // Adds the allowfullscreen attribute
 				//vidFrame.setAttribute('allowfullscreen', ''); // You can also use setAttribute if you prefer
@@ -417,10 +517,11 @@
 			}		
 			const title = document.createElement('div');
 			title.classList.add('grid-item-title');
-			title.textContent = item.title; // Set title text
+			title.textContent = titleItem; // Set title text
 			gridItem.appendChild(title); 
             gridContainer.appendChild(gridItem);
           });
+		  //console.log('added: '+i);
           gridContainer.appendChild(linkList);
         } catch (error) {
           console.error('There has been a problem with your fetch operation:', error);
@@ -479,8 +580,10 @@
             */
         }
         if (columns !== totalColumns || rows !== totalRows || totalCells == 0) {
-          console.log('recreate grid ' + columns + 'x' + rows);
           const gridContainer = document.getElementById('grid-container');
+		  const containers = gridContainer.getElementsByClassName('grid-item');
+		  totalContainer = containers.length;
+          //console.log('z recreate grid ' + columns + 'x' + rows+' = '+totalContainer);
           gridContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
           gridContainer.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
           totalColumns = columns;
@@ -490,7 +593,20 @@
           if (dataCount < 0) {
             loadData();
           } else {
-            createGridItem();
+			if(totalCells<totalContainer) {
+				//console.log('remove info: '+totalCells+' / '+totalContainer);
+				//delCount = totalContainer-totalCells;
+				for (let i = totalContainer-1; i >= totalCells; i--) {
+					console.log('remove '+i);
+					gridContainer.removeChild(containers[i]);
+				}
+			} else if(totalCells>totalContainer) {
+				//console.log('add '+totalCells+' / ' +totalContainer);
+				createGridItem(totalContainer);		
+			} else {
+				//console.log('else '+totalCells+' / '+totalContainer);
+				createGridItem();			
+			}
           }
         }
       }
