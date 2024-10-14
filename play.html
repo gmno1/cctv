@@ -217,8 +217,8 @@
         <button id="refresh-btn">🔄</button>
         <button id="play-btn">▶️</button>
         <button id="stop-btn" style="display: none;">⏹️</button>
-        <button id="prev-btn">⏪</button>
-        <button id="next-btn">⏩</button>
+        <button id="prev-btn" class="swipeArea">⏪</button>
+        <button id="next-btn" class="swipeArea">⏩</button>
         <button id="zoom-btn" class="swipeArea">🪟</button>
         <!-- <button id="zoom-in-btn">🪟🔍</button> -->
         <!-- <button id="zoom-out-btn">🔎</button> -->
@@ -371,7 +371,7 @@
 				json = json.data[0].areaTree[0].cameraTree;
 				plnJson[url] = json;
 		  }
-		  console.log(plnJson);
+		  //console.log(plnJson);
         } catch (error) {
           console.error('There has been a problem with your fetch operation:', error);
         }
@@ -412,7 +412,7 @@
 	  }
 	  
       async function createGridItem(offset = 0) {
-        //console.log('recreate grid item='+imgIndex+' / '+offset+' / '+(imgIndex + offset)+' / '+(imgIndex + totalCells));
+        console.log('recreate grid item='+imgIndex+' / '+offset+' / '+(imgIndex + offset)+' / '+(imgIndex + totalCells));
         try {
           const gridContainer = document.getElementById('grid-container');
 		  const linkList = document.getElementById('link-list');
@@ -597,7 +597,7 @@
 				//console.log('remove info: '+totalCells+' / '+totalContainer);
 				//delCount = totalContainer-totalCells;
 				for (let i = totalContainer-1; i >= totalCells; i--) {
-					console.log('remove '+i);
+					//console.log('remove '+i);
 					gridContainer.removeChild(containers[i]);
 				}
 			} else if(totalCells>totalContainer) {
@@ -623,18 +623,18 @@
 	  }
 	  
 	  function prevContent() {
+		console.log('prevContent');
 	    if (dataCount<0) {	return;	}
+	    if (imgIndex==0) {	return;	}
 		imgIndex = imgIndex - totalCells;
 		if (imgIndex < 0) {
-		  if(imgIndex!==0) {
 		    imgIndex = 0;
-			createGridItem();	  
-		  }
 		}
+		createGridItem();	  
 	  }
 
 	  function pageContent(pageIndex) {
-		console.log("pageContent = "+pageIndex);
+		//console.log("pageContent = "+pageIndex);
 	    if (dataCount<0) {	return;	}
 		var newIndex;
 		if ((pageIndex*totalCells) < dataCount) {
@@ -646,6 +646,13 @@
 			imgIndex = newIndex;
 			createGridItem();	  
 		} 
+	  }
+
+	  function firstContent(pageIndex) {
+	    if (dataCount<0) {	return;	}
+	    if (imgIndex==0) {	return;	}
+		imgIndex = 0;
+		createGridItem();	  
 	  }
 
 	  function lastContent(pageIndex) {
@@ -760,6 +767,12 @@
 				case '-':
 					zoomNext();
 					break;
+				case 'ArrowUp':
+					firstContent();
+					break;
+				case 'ArrowDown':
+					lastContent();
+					break;
 				case 'ArrowRight':
 					nextContent();
 					break;
@@ -848,6 +861,10 @@
 			}
 		} else if(id=='zoom-btn') {
 			zoomBack();
+		} else if(id=='prev-btn') {
+			firstContent();
+		} else if(id=='next-btn') {
+			lastContent();
 		}
 	  }
 	  
