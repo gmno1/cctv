@@ -283,7 +283,7 @@
 	  if(plnUrl) {
 		var jsonUrl = 'https://i-see.iconpln.co.id/backend/api/View/embedlink?url=' + plnUrl;
 	  } else {	  
-		var jsonUrl = groupId + '.json';
+		var jsonUrl = 'data/' + groupId + '.json';
 	  }
       var isAskFullscreen = parseInt(getQueryParam('full') ?? 1, 10);
       var modeIndex = parseInt(getQueryParam('mode') ?? 0, 10);
