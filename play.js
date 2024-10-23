@@ -164,7 +164,7 @@ function SetNotAvailable(aparent) {
 	aparent.innerHTML = '';
 	aparent.appendChild(fallbackText);		
 }
-		
+
 async function setVideoUrl(vidContainer, vidUrl) {
 	const videoPageUrl = vidUrl.replace('/media/', '/api/');
 	fetch(videoPageUrl)
@@ -242,6 +242,47 @@ function ImgOnClick(img) {
 	}
 }
 
+function VideoOnClick(video) {
+  const linkList = document.getElementById('link-list');
+  if (linkList.style.display === 'block') {
+    linkList.style.display = 'none';
+  } else {
+	// Pause all other videos on the page
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach(v => v.pause()); // Pause all videos	  
+    // Create fullscreen overlay if the link list is not visible
+    const fullVideo = document.createElement('video');
+    fullVideo.src = video.src;
+    fullVideo.style.width = '100vw';
+    fullVideo.style.height = '100vh';
+    fullVideo.style.objectFit = 'contain';
+    fullVideo.controls = false; // Enable controls like play, pause, etc.
+    fullVideo.autoplay = true; // Start playing automatically
+    fullVideo.loop = video.loop; // Keep the loop setting if applied to original video
+
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = '1000';
+    overlay.onclick = () => {
+      fullVideo.pause(); // Pause the video before removing
+      document.body.removeChild(overlay);
+		// reload all other videos on the page
+		const allVideos = document.querySelectorAll('video');
+		allVideos.forEach(v => v.load()); // load all videos	  
+    };
+    overlay.appendChild(fullVideo);
+    document.body.appendChild(overlay);
+  }
+}
+
 function PauseAll() {
 /*	const gridContainer = document.getElementById('grid-container');
 	const containers = gridContainer.getElementsByClassName('grid-item');
@@ -255,6 +296,23 @@ function PauseAll() {
 	videos.forEach(video => {
 		console.log('pause = '+video.src);
 		video.pause();
+	});		
+	
+}
+
+function ResumeAll() {
+/*	const gridContainer = document.getElementById('grid-container');
+	const containers = gridContainer.getElementsByClassName('grid-item');
+	for(griditem of containers) {
+		//for(item of griditem) {
+			console.log(griditem.id);
+		//}
+	}
+*/
+	let videos = document.querySelectorAll('.grid-item video');
+	videos.forEach(video => {
+		//console.log('pause = '+video.src);
+		video.play();
 	});		
 }
 
@@ -347,11 +405,17 @@ async function createGridItem(offset = 0) {
 				}
 				vidFrame.autoplay = true;
 				vidFrame.playsinline = true;
+				vidFrame.addEventListener('click', () => {
+					VideoOnClick(vidFrame);
+				});
 				gridItem.appendChild(vidFrame);
 			} else if (modeIndex == 11) {
 				const vidFrame = document.createElement('iframe');
 				vidFrame.src = videosrc;
 				vidFrame.allowFullscreen = true; // Adds the allowfullscreen attribute
+				vidFrame.addEventListener('click', () => {
+					VideoOnClick(vidFrame);
+				});
 				//vidFrame.setAttribute('allowfullscreen', ''); // You can also use setAttribute if you prefer
 				gridItem.appendChild(vidFrame);
 			} else {
@@ -360,6 +424,9 @@ async function createGridItem(offset = 0) {
 				const fileName = fileNameWithExtension.split('.')[0];
 				vidFrame.src = item.url.replace('/media/', '/api/');
 				vidFrame.allowFullscreen = true; // Adds the allowfullscreen attribute
+				vidFrame.addEventListener('click', () => {
+					VideoOnClick(vidFrame);
+				});
 				//vidFrame.setAttribute('allowfullscreen', ''); // You can also use setAttribute if you prefer
 				gridItem.appendChild(vidFrame);
 			}
