@@ -247,9 +247,6 @@ function VideoOnClick(video) {
   if (linkList.style.display === 'block') {
     linkList.style.display = 'none';
   } else {
-	// Pause all other videos on the page
-    const allVideos = document.querySelectorAll('video');
-    allVideos.forEach(v => v.pause()); // Pause all videos	  
     // Create fullscreen overlay if the link list is not visible
     const fullVideo = document.createElement('video');
     fullVideo.src = video.src;
@@ -260,6 +257,14 @@ function VideoOnClick(video) {
     fullVideo.autoplay = true; // Start playing automatically
     fullVideo.loop = video.loop; // Keep the loop setting if applied to original video
 
+	// Pause all other videos on the page, still loading, must 
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach(v => {
+		v.pause();
+		v.dataset.src = v.src;
+		v.removeAttribute('src');
+		v.load();
+	}); // Pause all videos	  
     const overlay = document.createElement('div');
     overlay.style.position = 'fixed';
     overlay.style.top = '0';
@@ -276,7 +281,10 @@ function VideoOnClick(video) {
       document.body.removeChild(overlay);
 		// reload all other videos on the page
 		const allVideos = document.querySelectorAll('video');
-		allVideos.forEach(v => v.load()); // load all videos	  
+		allVideos.forEach(v => {
+			//v.load();
+			v.src = v.dataset.src;
+		}); // load all videos	  
     };
     overlay.appendChild(fullVideo);
     document.body.appendChild(overlay);
