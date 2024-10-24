@@ -242,6 +242,59 @@ function ImgOnClick(img) {
 	}
 }
 
+function MenuClick(span) {
+//	alert(span.dataset.id);
+	const linkList = document.getElementById('link-list');
+	linkList.style.display = 'none';
+	imgIndex = parseInt(span.dataset.id ?? 0, 10);
+	createGridItem();
+}
+
+function ShowMenu() {
+	const linkList = document.getElementById('link-list');
+	linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
+	const ul = document.getElementById('link-list-ul'); // Target the UL element
+	//console.log(ul.childElementCount);
+	if(ul.childElementCount==0) {
+		let i = 0;
+		dataJson.forEach(item => {
+			const li = document.createElement('li');
+			const span = document.createElement('span'); // Use span instead of a
+			span.className = 'link';
+			span.textContent = item.title;
+			
+			// Add click event to run the corresponding function
+			span.onclick = () => {
+			  MenuClick(span); // Call the function using window object
+			};
+			span.dataset.id = i;
+			//console.log(item.title);
+			li.appendChild(span);
+			ul.appendChild(li); // Append each link to the UL element		
+			i = i+1;
+		})
+	}
+}
+
+// Function to filter links based on input
+function filterLinks() {
+  const filterValue = document.getElementById('filter-input').value.toLowerCase();
+  const ul = document.getElementById('link-list-ul');
+  const links = ul.getElementsByTagName('li');
+
+  // Loop through the links and hide those that don't match the filter
+  Array.from(links).forEach(link => {
+	const span = link.getElementsByTagName('span')[0];
+	if (span.textContent.toLowerCase().includes(filterValue)) {
+	  link.style.display = ''; // Show matching link
+	} else {
+	  link.style.display = 'none'; // Hide non-matching link
+	}
+  });
+}
+	
+document.getElementById('filter-input').addEventListener('input', filterLinks);
+
 function VideoOnClick(video) {
   const linkList = document.getElementById('link-list');
   if (linkList.style.display === 'block') {
@@ -335,7 +388,7 @@ function AllImage() {
 }
 
 async function createGridItem(offset = 0) {
-	//console.log('recreate grid item=' + imgIndex + ' / ' + offset + ' / ' + (imgIndex + offset) + ' / ' + (imgIndex + totalCells));
+//	console.log('recreate grid item=' + imgIndex + ' / ' + offset + ' / ' + (imgIndex + offset) + ' / ' + (imgIndex + totalCells));
 	try {
 		const gridContainer = document.getElementById('grid-container');
 		const linkList = document.getElementById('link-list');
@@ -611,8 +664,9 @@ function handleButtonClick(buttonId) {
 			toggleFullscreen();
 			break;
 		case 'menu-btn':
-			const linkList = document.getElementById('link-list');
-			linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
+			//const linkList = document.getElementById('link-list');
+			//linkList.style.display = linkList.style.display === 'block' ? 'none' : 'block';
+			ShowMenu();
 			break;
 		case 'refresh-btn':
 			createGridItem();
