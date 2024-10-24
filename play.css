@@ -223,20 +223,46 @@ body {
   max-width: 300px;
 }
 
-  /* Styling the link list */
+
+/* Link list styles */
 #link-list {
-  width: 400px;
-  height: 400px; /* Set a fixed height */
-  border: 1px solid #ccc; /* Optional: Add a border */
+  border: 1px solid #ccc;
   padding: 10px;
-  overflow-y: auto; /* Enable vertical scrolling */
-  background-color: #f9f9f9; /* Optional: Add background */
-  margin-top: 10px; /* Space between input and list */
+  background-color: #f9f9f9;
+  margin-top: 10px;
+  overflow-y: auto;
 }
 
+/* Media queries for responsiveness */
+@media (min-width: 400px) {
+  #link-list {
+    width: 400px;
+    height: 80vh;
+  }
+}
+
+@media (max-width: 400px) {
+  #link-list {
+    width: 100vw;
+    height: 80vh;
+  }
+}
+
+/* Filter input styling */
+#filter-input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+}
+
+/* List styles with bullet points */
 ul {
-  list-style-type: none; /* Remove bullet points */
-  padding: 0;
+  list-style-type: disc !important; /* Add bullet points */
+  padding-left: 20px; /* Add space for the bullet points */
   margin: 0;
 }
 
@@ -247,16 +273,27 @@ li {
 .link {
   text-decoration: none;
   color: #007BFF;
-  cursor: pointer; /* Change cursor to pointer */
+  cursor: pointer;
 }
 
 .link:hover {
-  text-decoration: underline; /* Hover effect */
+  text-decoration: underline;
 }
 
-/* Styling the filter input */
-#filter-input {
-  width: 100%; /* Match with the link list width */
-  padding: 5px;
-  margin-bottom: 10px; /* Space below the input */
+/* Portrait: menu at the bottom */
+@media (orientation: portrait) {
+  #main-content {
+    flex-direction: column;
+  }
+
+  #menu {
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+  }
+
+  #grid-container {
+    flex-grow: 1;
+    width: 100vw;
+  }
 }
