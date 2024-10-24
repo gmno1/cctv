@@ -222,3 +222,41 @@ body {
 #fullscreen-prompt {
   max-width: 300px;
 }
+
+  /* Styling the link list */
+#link-list {
+  width: 400px;
+  height: 400px; /* Set a fixed height */
+  border: 1px solid #ccc; /* Optional: Add a border */
+  padding: 10px;
+  overflow-y: auto; /* Enable vertical scrolling */
+  background-color: #f9f9f9; /* Optional: Add background */
+  margin-top: 10px; /* Space between input and list */
+}
+
+ul {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+.link {
+  text-decoration: none;
+  color: #007BFF;
+  cursor: pointer; /* Change cursor to pointer */
+}
+
+.link:hover {
+  text-decoration: underline; /* Hover effect */
+}
+
+/* Styling the filter input */
+#filter-input {
+  width: 100%; /* Match with the link list width */
+  padding: 5px;
+  margin-bottom: 10px; /* Space below the input */
+}
