@@ -428,7 +428,7 @@ async function createGridItem(offset = 0) {
 				//const fileName = fileNameWithExtension.split('.')[0];
 				//var videosrc = 'https://gmno1.github.io/cctv/v?id='+fileName;
 				videosrc = diskominfoUrl + item.diskominfo;
-				console.log("diskominfo:"+videosrc);
+				//console.log("diskominfo:"+videosrc);
 			} else {
 				titleItem = '🟢 '+item.title;
 				var imagesrc = item.url + '/cover?t=' + newTimestamp;
@@ -437,7 +437,7 @@ async function createGridItem(offset = 0) {
 				//const fileName = fileNameWithExtension.split('.')[0];
 				//var videosrc = 'https://gmno1.github.io/cctv/v?id='+fileName;
 				videosrc = item.url;
-				console.log("url:"+videosrc);
+				//console.log("url:"+videosrc);
 			}
 			//console.log(titleItem);
 			if (modeIndex == 0) {
