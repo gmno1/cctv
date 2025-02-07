@@ -13,8 +13,6 @@
         window.onload = function() {
             const id = getParameterByName('id');
             const url = 'https://backend.samagov.id/api/cctv/';
-    
-            // Redirect if the parameter exists
             if (id) {
                 document.getElementById('contentFrame').src = url+id+'/stream';
             } else {
