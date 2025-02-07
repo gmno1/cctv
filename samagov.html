@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCTV Samarinda</title>
+    <script>
+        // Function to get URL parameter
+        function getParameterByName(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+        const id = getParameterByName('id');
+        const url = 'https://backend.samagov.id/api/cctv/';
+
+        // Redirect if the parameter exists
+        if (id) {
+            window.location.href = url+id+'/stream';
+        } else {
+            document.write("<h2>No page parameter found.</h2>");
+        }
+    </script>
+</head>
+<body>
+</body>
+</html>
