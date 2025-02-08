@@ -9,6 +9,7 @@ if (plnUrl) {
 } else {
 	var jsonUrl = 'data/' + groupId + '.json';
 }
+const samagovUrl = 'https://backend.samagov.id/api/cctv/';
 const diskominfoUrl = 'https://diskominfo.samarindakota.go.id/api/cctv/';
 var isAskFullscreen = parseInt(getQueryParam('full') ?? 1, 10);
 var modeIndex = parseInt(getQueryParam('mode') ?? 0, 10);
@@ -421,6 +422,14 @@ async function createGridItem(offset = 0) {
 					var imagesrc = videosrc + '&tx=' + newTimestamp;
 					imagesrc = imagesrc.replace('&format=fmp4&', '&format=jpeg&');
 				}
+			} else if (item.samagov) {
+				titleItem = '🟢 '+item.title;
+				var imagesrc = samagovUrl + item.samagov + '/live-image';
+				//const fileNameWithExtension = item.url.split('/').pop(); 
+				//const fileName = fileNameWithExtension.split('.')[0];
+				//var videosrc = 'https://gmno1.github.io/cctv/v?id='+fileName;
+				videosrc = samagovUrl + item.samagov + '/stream';
+				//console.log("diskominfo:"+videosrc);
 			} else if (item.diskominfo) {
 				titleItem = '🟢 '+item.title;
 				var imagesrc = diskominfoUrl + item.diskominfo + '/cover?t=' + newTimestamp;
