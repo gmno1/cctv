@@ -179,6 +179,7 @@ async function setVideoUrl(vidContainer, vidUrl) {
 		})
 		.then(html => {
 			const parser = new DOMParser();
+			console.log(parser);
 			const doc = parser.parseFromString(html, 'text/html');
 			const videoElement = doc.querySelector('video');
 			if (videoElement) {
@@ -196,6 +197,52 @@ async function setVideoUrl(vidContainer, vidUrl) {
 		.catch(error => {
 			//console.log('vidp2 = '+vidContainer.parentElement);
 			SetNotAvailable(vidContainer.parentElement);
+			//console.error('There was a problem with the fetch operation:', error);
+			return;
+		});
+}
+
+async function setSamagovVideo(vidContainer, vidUrl) {
+	//console.log(vidUrl);
+	fetch(vidUrl)
+		.then(response => {
+			if (!response.ok) {
+				document.getElementById('videoContainer').innerHTML = '<p>Network response was not ok</p>';
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			console.log(data);
+			vidContainer.src = data.url.replace('&format=jpeg&', '&format=fmp4&');
+		})
+		.catch(error => {
+			//console.log('vidp2 = '+vidContainer.parentElement);
+			SetNotAvailable(vidContainer.parentElement);
+			//console.error('There was a problem with the fetch operation:', error);
+			return;
+		});
+}
+
+async function setSamagovImg(imgContainer, imgUrl) {
+	fetch(imgUrl)
+		.then(response => {
+			if (!response.ok) {
+				document.getElementById('videoContainer').innerHTML = '<p>Network response was not ok</p>';
+				throw new Error('Network response was not ok');
+			}
+			return response.json();
+		})
+		.then(data => {
+			//console.log(data);
+			//console.log(data.url);
+			var newTimestamp = new Date().getTime();
+			//console.log('url: '+data.url+'&ts=' + newTimestamp);
+			imgContainer.src = data.url+'&ts=' + newTimestamp;
+		})
+		.catch(error => {
+			//console.log('vidp2 = '+vidContainer.parentElement);
+			SetNotAvailable(imgContainer.parentElement);
 			//console.error('There was a problem with the fetch operation:', error);
 			return;
 		});
@@ -449,7 +496,32 @@ async function createGridItem(offset = 0) {
 				//console.log("url:"+videosrc);
 			}
 			//console.log(titleItem);
-			if (modeIndex == 0) {
+			if (item.samagov) {
+				if (modeIndex == 0) { 
+					const img = document.createElement('img');	
+					setSamagovImg(img,imagesrc);
+					img.id = "image";
+					img.alt = titleItem;
+					img.onerror = () => {
+						ImgOnError(img);
+					};
+					img.addEventListener('click', () => {
+						ImgOnClick(img);
+					});
+					gridItem.appendChild(img);
+				} else {
+					const vidFrame = document.createElement('video');
+					setSamagovVideo(vidFrame,imagesrc);				
+					//setSamagovVideo(vidFrame,videosrc);				
+					//vidFrame.src = videosrc;	
+					vidFrame.autoplay = true;
+					vidFrame.playsinline = true;
+					vidFrame.addEventListener('click', () => {
+						VideoOnClick(vidFrame);
+					});
+					gridItem.appendChild(vidFrame);
+				}
+			} else if (modeIndex == 0) {
 				const img = document.createElement('img');				
 				if((!imagesrc)&&(item.pln)) {
 					//console.log('wait');
