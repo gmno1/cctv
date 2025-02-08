@@ -480,7 +480,7 @@ async function createGridItem(offset = 0) {
 						vidFrame.dataset.cameraId=item.cameraId;					
 					}
 				} else {
-					//console.log('modeIndex=1 / not plnUrl = '+videosrc);
+					console.log('modeIndex=1 / not plnUrl = '+videosrc);
 					setVideoUrl(vidFrame, videosrc);
 				}
 				vidFrame.autoplay = true;
