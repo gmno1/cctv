@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <h2>Welcome, <span id="username"></span></h2>
+    <button onclick="sendMessage()">Send Message</button>
+    <script>
+        let tg = window.Telegram.WebApp;
+        document.getElementById("username").innerText = tg.initDataUnsafe.user?.first_name || "Guest";
+        tg.expand(); // Expands the mini app to full screen
+
+        function sendMessage() {
+            tg.sendData("Hello from Mini App!");
+        }
+    </script>
+</body>
+</html>
